@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import LayoutAdmin from "@/components/layout/admin/LayoutAdmin";
+import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
 import DashboardChartList from "@/components/dashboard/DashboardChartList";
 import { useAuthSession } from "@/lib/auth/useAuthSession";
 import { getUserProfileQuery } from "@/services/client/auth/queries";
@@ -93,14 +94,17 @@ export default function DashboardPageClient() {
   return (
     <LayoutAdmin breadcrumbTitle={breadcrumbTitle}>
       <div>
-        <div className="mb-20 grid grid-cols-2 gap-5 min-[992px]:grid-cols-4">
+        <FadeInStagger className="mb-20 grid grid-cols-2 gap-5 min-[992px]:grid-cols-4">
           {STATS_CONFIG.map((s) => (
-            <StatCard key={s.labelKey} value={s.value} label={t(s.labelKey)} icon={s.icon} />
+            <FadeInStaggerItem key={s.labelKey} className="min-w-0">
+              <StatCard value={s.value} label={t(s.labelKey)} icon={s.icon} />
+            </FadeInStaggerItem>
           ))}
-        </div>
+        </FadeInStagger>
 
         <div className="flex flex-col gap-5 min-[992px]:flex-row">
-          <div className="min-[992px]:w-[66%] rounded-3xl border border-[var(--Border)] bg-[var(--White)] py-[39px] pr-[39px] pb-[39px] pl-11">
+          <FadeIn className="min-[992px]:w-[66%]">
+          <div className="rounded-3xl border border-[var(--Border)] bg-[var(--White)] py-[39px] pr-[39px] pb-[39px] pl-11">
             <h4 className="-mt-2 mb-[33px] text-[22px] font-semibold leading-8 text-[var(--Secondary)]">
               {t("chartTitle")}
             </h4>
@@ -108,8 +112,10 @@ export default function DashboardPageClient() {
               <DashboardChartList style={1} />
             </div>
           </div>
+          </FadeIn>
 
-          <div className="min-w-0 flex-1 rounded-3xl border border-[var(--Border)] bg-[var(--White)] p-[39px]">
+          <FadeIn className="min-w-0 flex-1" delay={0.08}>
+          <div className="rounded-3xl border border-[var(--Border)] bg-[var(--White)] p-[39px]">
             <h4 className="-mt-2 mb-[33px] text-[22px] font-semibold leading-8 text-[var(--Secondary)]">
               {t("recentTitle")}
             </h4>
@@ -131,6 +137,7 @@ export default function DashboardPageClient() {
               </li>
             </ul>
           </div>
+          </FadeIn>
         </div>
       </div>
     </LayoutAdmin>

@@ -11,6 +11,7 @@ import {
   useDeleteAnnouncementMutation,
   type MyAnnouncementItem,
 } from "@/services/dashboard/My-properties";
+import { FadeIn } from "@/components/motion";
 
 const PLACEHOLDER_IMG =
   "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80";
@@ -92,6 +93,7 @@ export default function DashboardMyPropertiesClient() {
   const total = meta?.total ?? 0;
 
   return (
+    <FadeIn>
     <div className={wgBoxCls}>
       {q.isError ? (
         <p className="mb-4 text-[#c0392b]">
@@ -316,5 +318,6 @@ export default function DashboardMyPropertiesClient() {
         </div>
       ) : null}
     </div>
+    </FadeIn>
   );
 }

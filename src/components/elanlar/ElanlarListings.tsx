@@ -25,6 +25,7 @@ import {
   hasAdvancedListingParams,
   parseAdvancedListingParams,
 } from "@/services/client/properties/announcementAdvancedFilter";
+import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
 
 const PropertyCard = memo(function PropertyCard({
   row,
@@ -210,10 +211,11 @@ export default function ElanlarListings() {
   return (
     <div className="property-grid-wrap-v2 box-border w-full max-w-full overflow-x-hidden pb-20">
       <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
-        <div className="top mb-[21px]">
+        <FadeIn>
+          <div className="top mb-[21px]">
           <div className="sub flex flex-wrap items-center justify-between gap-4">
             <p className="m-0 text-[var(--Text)]">
-              {q.isPending ? tc("ellipsis") : t("resultsCount", { count: total })}
+              {q.isPending ? tc("ellipsis") : tc("resultsCount", { count: total })}
             </p>
             <div className="sort-wrap flex items-center gap-[7px]">
               <p className="m-0 w-full text-[var(--Fourth)]">{t("sortLabel")}</p>
@@ -228,7 +230,8 @@ export default function ElanlarListings() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-2 xl:grid-cols-3 [&>*]:min-w-0">
+        </FadeIn>
+        <FadeInStagger className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-2 xl:grid-cols-3 [&>*]:min-w-0">
           {q.isError ? (
             <div className="col-span-full px-3 py-6 text-[#c62828]">
               {t("loadError")}
@@ -237,10 +240,12 @@ export default function ElanlarListings() {
             <div className="col-span-full px-3 py-6 text-[var(--Text)]">{t("loading")}</div>
           ) : (
             clientFiltered.map((row) => (
-              <PropertyCard key={row.id} row={row} cardSwiperByIdRef={cardSwiperByIdRef} />
+              <FadeInStaggerItem key={row.id} className="min-w-0">
+                <PropertyCard row={row} cardSwiperByIdRef={cardSwiperByIdRef} />
+              </FadeInStaggerItem>
             ))
           )}
-        </div>
+        </FadeInStagger>
         {!q.isPending && !q.isError && clientFiltered.length === 0 ? (
           <div className="px-3 py-6 text-[var(--Text)]">
             {items.length === 0 ? t("emptyAll") : t("emptyFiltered")}

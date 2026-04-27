@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -27,6 +28,10 @@ export default function RootLayout({
     >
       <body className={`${roboto.className} flex min-h-full flex-col`}>
         {children}
+        <Script
+          src="https://app.inlyne.ai/scripts/preview.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

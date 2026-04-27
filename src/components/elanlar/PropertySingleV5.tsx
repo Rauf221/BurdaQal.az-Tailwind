@@ -27,6 +27,7 @@ import Layout from "@/components/layout/Layout";
 import SliderBoxDream from "@/components/elanlar/SliderBoxDream";
 import { announcementCardImages } from "@/components/elanlar/announcementCardImages";
 import { Link } from "@/i18n/navigation";
+import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
 import type { ResolvedAnnouncement } from "@/lib/announcement-server";
 import { publicStorageUrl } from "@/services/client/properties";
 import type {
@@ -188,7 +189,8 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
         <div className="property-single-wrap v5 pb-16 pt-6">
           <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
             <div className="w-full px-[14px]">
-              <div className="flex flex-wrap items-center justify-between gap-[30px] py-[30px]">
+              <FadeIn>
+                <div className="flex flex-wrap items-center justify-between gap-[30px] py-[30px]">
                 <ul className="breadcrumbs style-1 justify-start">
                   <li>
                     <Link href="/">{t("breadcrumbHome")}</Link>
@@ -208,10 +210,12 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                     <p>{t("saveListing")}</p>
                   </div>
                 </div>
-              </div>
+                </div>
+              </FadeIn>
             </div>
 
             <div className="w-full px-[14px]">
+              <FadeIn delay={0.05}>
               <div className="head-title">
                 <div>
                   <h3>{title}</h3>
@@ -228,9 +232,11 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                   </div>
                 </div>
               </div>
+              </FadeIn>
             </div>
 
             <div className="w-full px-[14px]">
+              <FadeIn delay={0.08}>
               <div className="thumbs-slider-column v5-thumbs arrow-style-1">
                 <Swiper
                   modules={[FreeMode, Navigation, Thumbs]}
@@ -282,10 +288,11 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                   ))}
                 </Swiper>
               </div>
+              </FadeIn>
             </div>
 
             <div className="grid grid-cols-1 gap-8 xl:grid-cols-12 xl:gap-10">
-              <div className="xl:col-span-8">
+              <FadeIn className="xl:col-span-8">
                 <div className="content-wrap">
                   <div className="overview">
                     <h4>{t("overviewTitle")}</h4>
@@ -506,15 +513,15 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                   </div>
 
                   <div className="smilar-homes mt-16">
-                    <h4 className="wow fadeInUp">{t("similarHomes")}</h4>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <h4 className="mb-2">{t("similarHomes")}</h4>
+                    <FadeInStagger className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       {similarHomes.map((row, si) => {
                         const d = row.detail;
                         const imgs = announcementCardImages(row.media);
                         const href = `/elanlar/${row.slug}`;
                         return (
-                          <div key={row.id}>
-                            <div className="box-dream has-border wow fadeInUp">
+                          <FadeInStaggerItem key={row.id} className="min-w-0">
+                            <div className="box-dream has-border">
                               <div className="image-group relative">
                                 <div className="list-tags">
                                   <Link href="/#" className="tags-item for-sell">
@@ -579,15 +586,15 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </FadeInStaggerItem>
                         );
                       })}
-                    </div>
+                    </FadeInStagger>
                   </div>
                 </div>
-              </div>
+              </FadeIn>
 
-              <div className="xl:col-span-4">
+              <FadeIn className="xl:col-span-4" delay={0.06}>
                 <div className="property-single-sidebar">
                   <div className="sidebar-item sidebar-contact-info">
                     <div className="sidebar-title">{t("contactTitle")}</div>
@@ -619,7 +626,7 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                     </div>
                   </div>
                 </div>
-              </div>
+              </FadeIn>
             </div>
           </div>
         </div>

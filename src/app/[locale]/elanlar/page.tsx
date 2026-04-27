@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import ElanlarFilterForm from "@/components/elanlar/ElanlarFilterForm";
 import ElanlarListings from "@/components/elanlar/ElanlarListings";
 import Layout from "@/components/layout/Layout";
+import { FadeIn } from "@/components/motion";
 
 function FilterFallback() {
   return (
@@ -21,32 +22,34 @@ export default async function ElanlarPage() {
   return (
     <Layout headerStyle={12} mainContentCls="px-5">
       <div>
-        <div className="flat-title page-property-grid-2 pt-10 pb-[42px]">
-          <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
-            <div className="text-start">
-              <h2 className="text-[40px] font-semibold leading-[47px] text-[var(--Secondary)]">
-                {t("title")}
-              </h2>
-              <ul className="mb-11 mt-0 flex flex-wrap items-center justify-start gap-[5px]">
-                <li>
-                  <Link
-                    href="/"
-                    className="text-base font-normal leading-6 text-[var(--Text)] hover:underline"
-                  >
-                    {tn("home")}
-                  </Link>
-                </li>
-                <li className="text-base font-normal leading-6 text-[var(--Text)]">/</li>
-                <li className="text-base font-normal leading-6 text-[var(--Text)]">
-                  {t("breadcrumbCurrent")}
-                </li>
-              </ul>
-              <Suspense fallback={<FilterFallback />}>
-                <ElanlarFilterForm />
-              </Suspense>
+        <FadeIn>
+          <div className="flat-title page-property-grid-2 pt-10 pb-[42px]">
+            <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
+              <div className="text-start">
+                <h2 className="text-[40px] font-semibold leading-[47px] text-[var(--Secondary)]">
+                  {t("title")}
+                </h2>
+                <ul className="mb-11 mt-0 flex flex-wrap items-center justify-start gap-[5px]">
+                  <li>
+                    <Link
+                      href="/"
+                      className="text-base font-normal leading-6 text-[var(--Text)] hover:underline"
+                    >
+                      {tn("home")}
+                    </Link>
+                  </li>
+                  <li className="text-base font-normal leading-6 text-[var(--Text)]">/</li>
+                  <li className="text-base font-normal leading-6 text-[var(--Text)]">
+                    {t("breadcrumbCurrent")}
+                  </li>
+                </ul>
+                <Suspense fallback={<FilterFallback />}>
+                  <ElanlarFilterForm />
+                </Suspense>
+              </div>
             </div>
           </div>
-        </div>
+        </FadeIn>
         <Suspense
           fallback={
             <div className="themesflat-container mx-auto max-w-[1428px] px-[14px] py-8 text-[var(--Text)]">

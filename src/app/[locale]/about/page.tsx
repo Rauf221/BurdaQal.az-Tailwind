@@ -6,6 +6,7 @@ import AboutFaqSection from "@/components/about/AboutFaqSection";
 import AboutUsSection from "@/components/about/AboutUsSection";
 import AboutVisionMissionSection from "@/components/about/AboutVisionMissionSection";
 import Layout from "@/components/layout/Layout";
+import { FadeIn } from "@/components/motion";
 
 export default function AboutPage() {
   const t = useTranslations("aboutPage");
@@ -16,9 +17,13 @@ export default function AboutPage() {
       mainContentCls="px-[14px] sm:px-8 md:px-12 lg:px-20 default"
     >
       <div>
-        <AboutVisionMissionSection />
-        <AboutUsSection />
-        <section className="flat-experts style-1 pb-24 md:pb-[190px]">
+        <FadeIn>
+          <AboutVisionMissionSection />
+        </FadeIn>
+        <FadeIn delay={0.06}>
+          <AboutUsSection />
+        </FadeIn>
+        <FadeIn as="section" className="flat-experts style-1 block pb-24 md:pb-[190px]">
           <div className="themesflat-container mx-auto max-w-[1428px] px-[14px]">
             <div className="heading-section mx-auto mb-12 max-w-[720px] text-center md:mb-[46px]">
               <h2 className="-mt-2 mb-4 text-[28px] font-semibold leading-tight text-[var(--Secondary)] md:text-[36px] md:leading-[44px]">
@@ -32,8 +37,10 @@ export default function AboutPage() {
               <AboutExpertsSlider />
             </div>
           </div>
-        </section>
-        <AboutFaqSection />
+        </FadeIn>
+        <FadeIn delay={0.08}>
+          <AboutFaqSection />
+        </FadeIn>
       </div>
     </Layout>
   );

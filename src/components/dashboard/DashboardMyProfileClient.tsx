@@ -18,6 +18,7 @@ import {
   resolveUserMediaUrl,
 } from "@/services/client/auth/profileParse";
 import { getUserProfileQuery } from "@/services/client/auth/queries";
+import { FadeIn } from "@/components/motion";
 
 const PLACEHOLDER_AVATAR =
   "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&q=80";
@@ -287,6 +288,8 @@ export default function DashboardMyProfileClient() {
   }
 
   return (
+    <>
+      <FadeIn>
     <div>
       <div className={wgBoxCls}>
         <h4 className={h4Cls}>{t("sectionProfile")}</h4>
@@ -473,6 +476,8 @@ export default function DashboardMyProfileClient() {
           </div>
         </form>
       </div>
+    </div>
+      </FadeIn>
 
       {otpModalOpen ? (
         <div
@@ -546,6 +551,6 @@ export default function DashboardMyProfileClient() {
           </div>
         </div>
       ) : null}
-    </div>
+    </>
   );
 }

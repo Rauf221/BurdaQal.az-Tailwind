@@ -14,6 +14,7 @@ import {
   BlogGridSkeleton,
   BlogListPageSkeleton,
 } from "@/components/blog/BlogListSkeleton";
+import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
 
 function BlogListFallback() {
   return <BlogListPageSkeleton />;
@@ -60,27 +61,30 @@ function BlogListContent() {
 
   return (
     <>
-      <div className="flat-title relative z-20 pt-[90px] pb-[94px]">
-        <div className="themesflat-container full mx-auto w-full max-w-[1920px] px-[14px]">
-          <div className="text-center">
-            <h2 className="mb-[14px] text-[40px] font-semibold leading-[47px] text-[var(--Secondary)]">
-              {t("title")}
-            </h2>
-            <ul className="breadcrumbs style-1 flex flex-wrap items-center justify-center gap-[5px]">
-              <li>
-                <Link href="/" className="text-[15px] leading-7 text-[var(--Text)]">
-                  {tn("home")}
-                </Link>
-              </li>
-              <li className="text-[15px] leading-7 text-[var(--Text)]">/</li>
-              <li className="text-[15px] leading-7 text-[var(--Text)]">{t("title")}</li>
-            </ul>
+      <FadeIn>
+        <div className="flat-title relative z-20 pt-[90px] pb-[94px]">
+          <div className="themesflat-container full mx-auto w-full max-w-[1920px] px-[14px]">
+            <div className="text-center">
+              <h2 className="mb-[14px] text-[40px] font-semibold leading-[47px] text-[var(--Secondary)]">
+                {t("title")}
+              </h2>
+              <ul className="breadcrumbs style-1 flex flex-wrap items-center justify-center gap-[5px]">
+                <li>
+                  <Link href="/" className="text-[15px] leading-7 text-[var(--Text)]">
+                    {tn("home")}
+                  </Link>
+                </li>
+                <li className="text-[15px] leading-7 text-[var(--Text)]">/</li>
+                <li className="text-[15px] leading-7 text-[var(--Text)]">{t("title")}</li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      </FadeIn>
 
       <div className="blog-list-api-wrap px-5">
-        <div className="widget-tabs style-1">
+        <FadeIn>
+          <div className="widget-tabs style-1">
           <div className="themesflat-container mx-auto mb-[30px] w-full max-w-[1428px] px-[14px]">
             {tagsPending ? (
               <BlogFilterSkeletonRow />
@@ -114,9 +118,10 @@ function BlogListContent() {
             )}
           </div>
         </div>
+        </FadeIn>
 
         <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
-          <div className="grid grid-cols-1 gap-[29px] sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          <FadeInStagger className="grid grid-cols-1 gap-[29px] sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {blogsPending ? <BlogGridSkeleton /> : null}
             {isError ? (
               <div className="col-span-full text-[var(--Text)]">
@@ -126,7 +131,7 @@ function BlogListContent() {
             {!blogsPending &&
               !isError &&
               posts.map((post) => (
-                <div key={post.slug}>
+                <FadeInStaggerItem key={post.slug} className="min-w-0">
                   <div
                     className="group wg-blog mb-0 flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl transition-shadow hover:shadow-[0px_6px_15px_0px_#404F680D]"
                     role="link"
@@ -174,7 +179,7 @@ function BlogListContent() {
                       </Link>
                     </div>
                   </div>
-                </div>
+                </FadeInStaggerItem>
               ))}
             {!blogsPending && !isError && posts.length === 0 ? (
               <div className="col-span-full text-[var(--Text)]">
@@ -225,7 +230,7 @@ function BlogListContent() {
                 </ul>
               </div>
             ) : null}
-          </div>
+          </FadeInStagger>
         </div>
       </div>
     </>

@@ -1,6 +1,7 @@
 import HtmlLang from "@/components/elements/HtmlLang";
 import { routing } from "@/i18n/routing";
 import { fetchSiteSettings } from "@/lib/site-api-server";
+import MotionProvider from "@/components/motion/MotionProvider";
 import QueryProvider from "@/providers/QueryProvider";
 import { SiteBrandingProvider } from "@/providers/SiteBrandingProvider";
 import { NextIntlClientProvider } from "next-intl";
@@ -48,8 +49,10 @@ export default async function LocaleLayout({
     <NextIntlClientProvider locale={locale} messages={messages}>
       <QueryProvider>
         <SiteBrandingProvider initialSiteSettings={initialSiteSettings}>
-          <HtmlLang locale={locale} />
-          {children}
+          <MotionProvider>
+            <HtmlLang locale={locale} />
+            {children}
+          </MotionProvider>
         </SiteBrandingProvider>
       </QueryProvider>
     </NextIntlClientProvider>

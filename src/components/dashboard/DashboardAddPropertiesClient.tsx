@@ -19,6 +19,7 @@ import {
   useSaveMediaSectionMutation,
 } from "@/services/dashboard/Add-New-Properties";
 import { myAnnouncementShowQuery } from "@/services/dashboard/My-properties";
+import { FadeIn } from "@/components/motion";
 
 const MEDIA_RULES = {
   minWidth: 800,
@@ -531,6 +532,7 @@ export default function DashboardAddPropertiesClient({
 
   return (
     <LayoutAdmin breadcrumbTitle={breadcrumbTitle}>
+      <FadeIn>
       <form
         ref={formRef}
         className="flex flex-col gap-[30px]"
@@ -1047,6 +1049,7 @@ export default function DashboardAddPropertiesClient({
           </div>
         </div>
       </form>
+      </FadeIn>
     </LayoutAdmin>
   );
 }

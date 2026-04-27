@@ -10,6 +10,7 @@ import {
   getContactQuery,
   useContactFormMutation,
 } from "@/services/client/contact";
+import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
 
 export default function ContactView() {
   const locale = useLocale();
@@ -55,7 +56,8 @@ export default function ContactView() {
 
   return (
     <div>
-      <div className="wrap-map-v5 relative pb-0 max-md:pb-0 min-[992px]:pb-[193px]">
+      <FadeIn>
+        <div className="wrap-map-v5 relative pb-0 max-md:pb-0 min-[992px]:pb-[193px]">
         {isPending ? (
           <div
             className="row-height min-h-[570px] w-full rounded-2xl bg-[#ececec]"
@@ -73,8 +75,8 @@ export default function ContactView() {
             referrerPolicy="no-referrer-when-downgrade"
           />
         )}
-        <div className="grid-contact relative mx-auto flex w-full max-w-[1190px] flex-wrap gap-10 px-4 pt-5 min-[992px]:absolute min-[992px]:bottom-0 min-[992px]:left-1/2 min-[992px]:-translate-x-1/2 min-[992px]:flex-nowrap min-[992px]:px-4 min-[992px]:pt-0">
-          <div className="contact-item min-h-[385px] w-full flex-1 rounded-3xl bg-[var(--White)] px-[30px] py-[30px] text-center text-[var(--Secondary)] shadow-[0px_6px_15px_0px_#404F680D] min-[551px]:px-[50px] min-[551px]:py-[60px]">
+        <FadeInStagger className="grid-contact relative mx-auto flex w-full max-w-[1190px] flex-wrap gap-10 px-4 pt-5 min-[992px]:absolute min-[992px]:bottom-0 min-[992px]:left-1/2 min-[992px]:-translate-x-1/2 min-[992px]:flex-nowrap min-[992px]:px-4 min-[992px]:pt-0">
+          <FadeInStaggerItem className="contact-item min-h-[385px] w-full min-w-0 flex-1 rounded-3xl bg-[var(--White)] px-[30px] py-[30px] text-center text-[var(--Secondary)] shadow-[0px_6px_15px_0px_#404F680D] min-[551px]:px-[50px] min-[551px]:py-[60px]">
             <div className="icon mx-auto mb-[22px] flex h-20 w-20 items-center justify-center rounded-full bg-[#F9F9F9]">
               <MapPin className="h-9 w-9 text-[var(--Secondary)]" strokeWidth={1.25} />
             </div>
@@ -96,8 +98,8 @@ export default function ContactView() {
                 {t("openInMaps")}
               </a>
             </div>
-          </div>
-          <div className="contact-item min-h-[385px] w-full flex-1 rounded-3xl bg-[var(--White)] px-[30px] py-[30px] text-center text-[var(--Secondary)] shadow-[0px_6px_15px_0px_#404F680D] min-[551px]:px-[50px] min-[551px]:py-[60px]">
+          </FadeInStaggerItem>
+          <FadeInStaggerItem className="contact-item min-h-[385px] w-full min-w-0 flex-1 rounded-3xl bg-[var(--White)] px-[30px] py-[30px] text-center text-[var(--Secondary)] shadow-[0px_6px_15px_0px_#404F680D] min-[551px]:px-[50px] min-[551px]:py-[60px]">
             <div className="icon mx-auto mb-[22px] flex h-20 w-20 items-center justify-center rounded-full bg-[#F9F9F9]">
               <Phone className="h-9 w-9 text-[var(--Secondary)]" strokeWidth={1.25} />
             </div>
@@ -117,8 +119,8 @@ export default function ContactView() {
                 {t("call")}
               </a>
             </div>
-          </div>
-          <div className="contact-item min-h-[385px] w-full flex-1 rounded-3xl bg-[var(--White)] px-[30px] py-[30px] text-center text-[var(--Secondary)] shadow-[0px_6px_15px_0px_#404F680D] min-[551px]:px-[50px] min-[551px]:py-[60px]">
+          </FadeInStaggerItem>
+          <FadeInStaggerItem className="contact-item min-h-[385px] w-full min-w-0 flex-1 rounded-3xl bg-[var(--White)] px-[30px] py-[30px] text-center text-[var(--Secondary)] shadow-[0px_6px_15px_0px_#404F680D] min-[551px]:px-[50px] min-[551px]:py-[60px]">
             <div className="icon mx-auto mb-[22px] flex h-20 w-20 items-center justify-center rounded-full bg-[#F9F9F9]">
               <Mail className="h-9 w-9 text-[var(--Secondary)]" strokeWidth={1.25} />
             </div>
@@ -138,11 +140,12 @@ export default function ContactView() {
                 {t("writeEmail")}
               </a>
             </div>
-          </div>
-        </div>
+          </FadeInStaggerItem>
+        </FadeInStagger>
       </div>
+      </FadeIn>
 
-      <section className="tf-section send-message pt-[120px] pb-[120px] min-[992px]:pb-[196px] min-[992px]:pt-[200px]">
+      <FadeIn as="section" className="tf-section send-message block pt-[120px] pb-[120px] min-[992px]:pb-[196px] min-[992px]:pt-[200px]">
         <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
           <div className="heading-section mx-auto mb-[35px] text-center">
             <h2 className="-mt-2 mb-4 text-[40px] font-semibold leading-[47px] text-[var(--Secondary)]">
@@ -271,7 +274,7 @@ export default function ContactView() {
             </form>
           </div>
         </div>
-      </section>
+      </FadeIn>
     </div>
   );
 }
