@@ -523,43 +523,6 @@ ul.breadcrumbs.style-1 a:hover {
   text-decoration: underline;
 }
 
-/* Save icon row */
-.list-icons-page {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 15px;
-}
-
-.list-icons-page .item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-}
-
-.list-icons-page .item .icon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--White);
-  border: 1px solid var(--Border);
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
-}
-
-.list-icons-page .item:hover .icon {
-  background-color: #f9f9f9;
-}
-
-.list-icons-page .item p {
-  margin: 0;
-  color: var(--Secondary);
-  font-size: 15px;
-}
-
 /* Similar homes — box-dream */
 .smilar-homes .box-dream.has-border {
   position: relative;
@@ -643,18 +606,4 @@ ul.breadcrumbs.style-1 a:hover {
   font-size: 15px;
   line-height: 28px;
   color: var(--Text);
-}
-
-.smilar-homes .box-dream .button-heart {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  z-index: 5;
-  width: 33px;
-  height: 33px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: #1a1a1a4d;
 }

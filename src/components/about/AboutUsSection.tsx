@@ -8,9 +8,6 @@ import { getAboutQuery } from "@/services/client/about";
 const FALLBACK_TITLE = "Local expertise for luxury homes";
 const FALLBACK_DESCRIPTION =
   "Pellentesque egestas elementum egestas faucibus sem. Velit nunc egestas ut morbi. Leo diam diam nibh eget fermentum massa pretium. Mi mauris nulla ac dictum ut mauris non.";
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=80";
-
 function apiBase(): string {
   return (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/+$/, "");
 }
@@ -23,9 +20,11 @@ export default function AboutUsSection() {
   const title = block?.title?.trim() || FALLBACK_TITLE;
   const description = block?.description?.trim() || FALLBACK_DESCRIPTION;
   const rawImg = block?.image || block?.thumb_image;
-  const imgSrc = rawImg
-    ? resolveMediaUrl(apiBase(), rawImg) || FALLBACK_IMAGE
-    : FALLBACK_IMAGE;
+  const imgSrc = (() => {
+    if (!rawImg) return null;
+    const u = resolveMediaUrl(apiBase(), rawImg);
+    return u ? u : null;
+  })();
 
   return (
     <section className="luxury-home style-5 bg-white pb-32 md:pb-[200px]">
@@ -34,15 +33,18 @@ export default function AboutUsSection() {
           <div className="w-full md:w-1/2 md:max-w-[50%]">
             <div
               className={
-                "image overflow-hidden rounded-2xl" +
+                "image min-h-[240px] overflow-hidden rounded-2xl" +
                 (isPending ? " opacity-50" : "")
               }
             >
-              <img
-                src={imgSrc}
-                alt=""
-                className="h-full w-full object-cover"
-              />
+              {imgSrc ? (
+                <img src={imgSrc} alt="" className="h-full w-full min-h-[240px] object-cover" />
+              ) : (
+                <div
+                  className="h-full min-h-[240px] w-full bg-gradient-to-br from-[#e8e8e8] to-[#cfcfcf] md:min-h-[320px]"
+                  aria-hidden
+                />
+              )}
             </div>
           </div>
           <div className="flex w-full flex-col justify-center md:max-w-[42%] md:flex-1">

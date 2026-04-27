@@ -55,6 +55,23 @@
   font-weight: 700;
 }
 
+/* `ElanlarCard` — Figma 2116:7155 / 2116:7177 ağ pagination nöqtələri */
+.elanlar-card-swiper {
+  --swiper-pagination-color: #fff;
+}
+.elanlar-card-swiper .swiper-pagination-bullet {
+  width: 7px;
+  height: 7px;
+  margin: 0 3px !important;
+  background: rgba(255, 255, 255, 0.55);
+  opacity: 1;
+}
+.elanlar-card-swiper .swiper-pagination-bullet-active {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+}
+
 @theme inline {
   --color-jh-white: var(--White);
   --color-jh-text: var(--Text);
@@ -567,4 +584,150 @@ body.mobile-menu-visible {
     right: 0;
     width: 100%;
   }
+}
+
+/* Header — “reverse” CTA: Primary fon, ağ mətn, hoverda tündləşən primary */
+.jh-reverse-btn-inner {
+  background: var(--Primary);
+  transition:
+    background 0.28s,
+    box-shadow 0.25s;
+}
+
+.jh-reverse-btn-link:hover .jh-reverse-btn-inner {
+  background: #6fb042;
+  box-shadow: 0 6px 20px rgba(107, 176, 66, 0.35);
+}
+
+.jh-reverse-btn__letter {
+  display: inline-block;
+  color: #fff;
+  transform: translateY(110%);
+  transition:
+    transform 0.35s cubic-bezier(0.76, 0, 0.24, 1),
+    color 0.22s;
+}
+
+.jh-reverse-btn-link:hover .jh-reverse-btn__letter {
+  color: #fff;
+}
+
+/* Header Giriş pill: şəffaf fon, hərf rəngi variant; hover primary (ReverseHoverHeaderLoginPill) */
+.jh-reverse-ghost-pill--inverse .jh-reverse-btn__letter {
+  color: #fff;
+}
+
+.jh-reverse-ghost-pill--inverse:hover .jh-reverse-btn__letter {
+  color: #1a1a1a;
+}
+
+.jh-reverse-ghost-pill--light .jh-reverse-btn__letter {
+  color: #1a1a1a;
+}
+
+.jh-reverse-ghost-pill--light:hover .jh-reverse-btn__letter {
+  color: #1a1a1a;
+}
+
+/* —— justhome: ilk yükləmə örtüyü (AppLoadingGate + Preloader) —— */
+@keyframes jh-preload-pulse {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes jh-preload-logo-vanish {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.38);
+  }
+  22% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.jh-preload-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+}
+
+.jh-preload-container .middle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  margin: 0;
+}
+
+.jh-preload-container .jh-preload-container__logo {
+  display: block;
+  width: clamp(64px, 18vw, 120px);
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  animation: jh-preload-pulse 1.2s linear infinite alternate;
+}
+
+.jh-preload-container.jh-preload-container--transparent {
+  background-color: transparent;
+}
+
+.jh-preload-container.jh-preload-container--transparent .jh-preload-container__logo {
+  animation: jh-preload-logo-vanish 4.5s ease-in-out forwards;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.jh-preload-container.jh-preload-container--white {
+  background-color: #fff;
+  transition: background-color 0.5s ease-out;
+}
+
+.jh-preload-container.jh-preload-container--white .jh-preload-container__logo {
+  animation: jh-preload-logo-vanish 4.5s ease-in-out forwards;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.jh-preload-container.jh-preload-container--white.jh-preload-container--white-to-clear {
+  background-color: transparent;
+}
+
+.jh-preload-container.jh-preload-container--gate {
+  background-color: #fff;
+  transition: background-color 0.75s ease-out;
+}
+
+.jh-preload-container.jh-preload-container--gate.jh-preload-container--gate-loading
+  .jh-preload-container__logo {
+  animation: jh-preload-pulse 1.2s linear infinite alternate;
+}
+
+.jh-preload-container.jh-preload-container--gate.jh-preload-container--gate-fading {
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.jh-preload-container.jh-preload-container--gate.jh-preload-container--gate-fading
+  .jh-preload-container__logo {
+  animation: jh-preload-logo-vanish 1.1s ease-out forwards;
 }

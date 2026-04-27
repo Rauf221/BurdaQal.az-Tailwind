@@ -4,17 +4,8 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import {
-  Bath,
-  Bed,
-  ChevronLeft,
-  ChevronRight,
-  Heart,
-  LayoutGrid,
-  MapPin,
-} from "lucide-react";
-import { Link } from "@/i18n/navigation";
-import SliderBoxDream from "@/components/elanlar/SliderBoxDream";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import ElanlarCard from "@/components/elements/ElanlarCard";
 import { announcementCardImages } from "@/components/elanlar/announcementCardImages";
 import {
   announcementsListQuery,
@@ -29,12 +20,8 @@ import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
 
 const PropertyCard = memo(function PropertyCard({
   row,
-  cardSwiperByIdRef,
 }: {
   row: PublicAnnouncementItem;
-  cardSwiperByIdRef: React.MutableRefObject<
-    Record<number, import("swiper").Swiper | undefined>
-  >;
 }) {
   const t = useTranslations("listings");
   const tc = useTranslations("common");
@@ -65,95 +52,25 @@ const PropertyCard = memo(function PropertyCard({
   const detailHref = `/elanlar/${row.slug}`;
 
   return (
-    <div ref={cardRef}>
-      <div
-        className="box-dream has-border group relative mb-[30px] rounded-2xl border border-[var(--Border)] bg-[var(--White)] pt-[9px] transition-shadow hover:shadow-[0px_6px_15px_0px_#404F680D]"
-        onMouseEnter={() => {
-          const s = cardSwiperByIdRef.current[row.id];
-          s?.autoplay?.start();
-        }}
-        onMouseLeave={() => {
-          const s = cardSwiperByIdRef.current[row.id];
-          s?.autoplay?.stop();
-        }}
-      >
-        <div className="image-group relative mx-[10px] aspect-[4/3] w-[calc(100%-20px)] max-w-[95.5%] overflow-hidden rounded-xl">
-          <div className="list-tags absolute left-5 top-5 z-[2] flex gap-2.5">
-            <span className="tags-item for-sell rounded-[120px] bg-[var(--Fourth)] px-[15px] py-2 text-[13px] font-medium leading-[15px] text-[var(--White)]">
-              {t("tagListing")}
-            </span>
-          </div>
-          <div className="button-heart pointer-events-none absolute right-5 top-5 z-20 flex h-[33px] w-[33px] items-center justify-center rounded-full bg-[#1A1A1A4D] p-2 opacity-0 transition-opacity group-hover:opacity-100">
-            <Heart className="h-[15px] w-[15px] text-[var(--White)]" fill="currentColor" />
-          </div>
-          {isVisible ? (
-            <div className="relative z-[1] h-full min-h-0 w-full [&_.swiper]:!m-0 [&_.swiper]:h-full [&_.swiper]:!max-w-full [&_.swiper]:!w-full">
-              <SliderBoxDream
-                path="house/property-listing"
-                start={1}
-                end={3}
-                detailHref={detailHref}
-                images={images}
-                navKey={`elan-${row.id}`}
-                autoplayOnHover
-                onSwiperReady={(swiper) => {
-                  cardSwiperByIdRef.current[row.id] = swiper;
-                }}
-              />
-            </div>
-          ) : (
-            <Link href={detailHref} className="block h-full w-full">
-              <img
-                src={images[0]}
-                alt={row.title || ""}
-                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                loading="lazy"
-                decoding="async"
-              />
-            </Link>
-          )}
-        </div>
-        <Link href={detailHref} className="box-dream-body-link block w-full text-inherit no-underline">
-          <div className="content box-border w-full px-[30px] pb-[30px] pt-6">
-            <div className="head mb-[11px] flex flex-wrap items-start justify-between gap-2.5">
-              <div className="title max-w-[270px] overflow-hidden text-ellipsis whitespace-nowrap text-[19px] font-medium leading-7 text-[var(--Secondary)]">
-                {row.title}
-              </div>
-              <div className="price text-[21px] font-semibold leading-[25px] text-[var(--Third)]">
-                {row.price ? t("priceAzn", { price: row.price }) : tc("dash")}
-              </div>
-            </div>
-            <div className="location mb-[27px] flex items-center gap-2.5">
-              <div className="icon text-[var(--Text)]">
-                <MapPin className="h-5 w-5" strokeWidth={1.5} />
-              </div>
-              <p className="m-0 overflow-hidden text-ellipsis whitespace-nowrap text-base font-normal leading-6 text-[var(--Text)]">
-                {street || tc("dash")}
-              </p>
-            </div>
-            <div className="icon-box flex flex-wrap items-center gap-x-[31px] gap-y-3">
-              <div className="item relative flex items-center gap-2.5 text-[var(--Text)] after:absolute after:-right-4 after:h-5 after:w-px after:bg-[var(--Border)] last:after:hidden">
-                <Bed className="h-5 w-5 shrink-0" strokeWidth={1.5} />
-                <p className="m-0 text-base font-normal leading-5 text-[var(--Text)]">
-                  {d ? t("bedCount", { count: d.bedroom }) : tc("dash")}
-                </p>
-              </div>
-              <div className="item relative flex items-center gap-2.5 text-[var(--Text)] after:absolute after:-right-4 after:h-5 after:w-px after:bg-[var(--Border)] last:after:hidden">
-                <Bath className="h-5 w-5 shrink-0" strokeWidth={1.5} />
-                <p className="m-0 text-base font-normal leading-5 text-[var(--Text)]">
-                  {d ? t("bathCount", { count: d.bathroom }) : tc("dash")}
-                </p>
-              </div>
-              <div className="item relative flex items-center gap-2.5 text-[var(--Text)]">
-                <LayoutGrid className="h-5 w-5 shrink-0" strokeWidth={1.5} />
-                <p className="m-0 text-base font-normal leading-5 text-[var(--Text)]">
-                  {d ? t("roomCount", { count: d.room }) : tc("dash")}
-                </p>
-              </div>
-            </div>
-          </div>
-        </Link>
-      </div>
+    <div ref={cardRef} className="mb-[30px] min-w-0">
+      <ElanlarCard
+        href={detailHref}
+        title={row.title ?? ""}
+        imageAlt={row.title ?? ""}
+        priceLine={
+          row.price ? t("priceAzn", { price: row.price }) : tc("dash")
+        }
+        address={street || tc("dash")}
+        beds={d?.bedroom ?? null}
+        baths={d?.bathroom ?? null}
+        rooms={d?.room ?? null}
+        emptyLabel={tc("dash")}
+        images={images}
+        mediaReady={isVisible}
+        badge={t("tagListing")}
+        autoplayOnHover
+        className="w-full max-w-full"
+      />
     </div>
   );
 });
@@ -164,9 +81,6 @@ export default function ElanlarListings() {
   const tc = useTranslations("common");
   const searchParams = useSearchParams();
   const [page, setPage] = useState(1);
-  const cardSwiperByIdRef = useRef<Record<number, import("swiper").Swiper | undefined>>(
-    {},
-  );
   const searchKey = searchParams.toString();
   const search = String(searchParams.get("search") ?? "").trim();
   const category_id = String(searchParams.get("category_id") ?? "").trim();
@@ -193,7 +107,6 @@ export default function ElanlarListings() {
 
   useEffect(() => {
     setPage(1);
-    cardSwiperByIdRef.current = {};
   }, [searchKey]);
 
   const items = useMemo(() => q.data?.data ?? [], [q.data?.data]);
@@ -231,7 +144,7 @@ export default function ElanlarListings() {
           </div>
         </div>
         </FadeIn>
-        <FadeInStagger className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-2 xl:grid-cols-3 [&>*]:min-w-0">
+        <FadeInStagger className="grid grid-cols-1 gap-x-4 gap-y-0 md:grid-cols-2 xl:grid-cols-4 [&>*]:min-w-0">
           {q.isError ? (
             <div className="col-span-full px-3 py-6 text-[#c62828]">
               {t("loadError")}
@@ -241,7 +154,7 @@ export default function ElanlarListings() {
           ) : (
             clientFiltered.map((row) => (
               <FadeInStaggerItem key={row.id} className="min-w-0">
-                <PropertyCard row={row} cardSwiperByIdRef={cardSwiperByIdRef} />
+                <PropertyCard row={row} />
               </FadeInStaggerItem>
             ))
           )}

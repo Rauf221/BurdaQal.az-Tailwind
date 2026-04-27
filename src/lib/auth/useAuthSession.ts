@@ -8,9 +8,9 @@ import { AUTH_TOKEN_CHANGED_EVENT, getAuthToken } from "@/lib/api/client";
  * SSR ilə uyğun gəlməsi üçün ilk render false; mount-dan sonra sinxronlaşır.
  */
 export function useAuthSession(): boolean {
-  const [authed, setAuthed] = useState(() =>
-    typeof window !== "undefined" ? Boolean(getAuthToken()) : false,
-  );
+  // Heç vaxt client ilk render-də server-dən fərqli olmasın: SSR+hydration hər ikisi false.
+  // Token barədə həqiqət yalnız effect-də (və event-də) yenilənir.
+  const [authed, setAuthed] = useState(false);
 
   useEffect(() => {
     const sync = () => setAuthed(Boolean(getAuthToken()));

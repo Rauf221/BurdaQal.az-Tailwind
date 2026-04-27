@@ -31,7 +31,7 @@ export default function AboutFaqSection() {
   return (
     <section
       id="faq"
-      className="tf-section flat-question style-1 pt-24 pb-20 md:pt-[100px] md:pb-[150px]"
+      className="tf-section flat-question style-1  pb-20  md:pb-[150px]"
     >
       <div className="themesflat-container mx-auto max-w-[1428px] px-[14px]">
         <div className="heading-section mx-auto mb-[46px] max-w-[720px] text-center">

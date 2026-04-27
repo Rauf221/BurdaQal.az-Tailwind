@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import { ChevronLeft, ChevronRight, MapPin, Pencil, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, ImageOff, MapPin, Pencil, Trash2 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { getAxiosErrorMessage } from "@/services/client/auth/apiMessage";
 import {
@@ -12,9 +12,6 @@ import {
   type MyAnnouncementItem,
 } from "@/services/dashboard/My-properties";
 import { FadeIn } from "@/components/motion";
-
-const PLACEHOLDER_IMG =
-  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80";
 
 const wgBoxCls =
   "mb-20 rounded-3xl border border-[var(--Border)] bg-[var(--White)] py-10 pl-6 pr-6 last:mb-0 md:pl-11 md:pr-[39px]";
@@ -39,6 +36,29 @@ function absoluteStorageUrl(path: string | null | undefined): string | null {
   } catch {
     return raw;
   }
+}
+
+function DashboardPropertyThumb({ src }: { src: string | null }) {
+  const [failed, setFailed] = useState(false);
+  if (!src || failed) {
+    return (
+      <div
+        className="flex h-full min-h-[128.57px] w-full items-center justify-center self-stretch bg-[#f0f0f0] text-[var(--Text)]/30"
+        aria-hidden
+      >
+        <ImageOff className="h-8 w-8" strokeWidth={1.25} />
+      </div>
+    );
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      className="block h-full w-full min-h-[128.57px] object-cover object-center"
+      onError={() => setFailed(true)}
+    />
+  );
 }
 
 type DeleteTarget = {
@@ -133,8 +153,7 @@ export default function DashboardMyPropertiesClient() {
           ) : (
             <ul className="m-0 list-none p-0">
               {items.map((row) => {
-                const imgSrc =
-                  absoluteStorageUrl(row.media?.cover_image) ?? PLACEHOLDER_IMG;
+                const imgSrc = absoluteStorageUrl(row.media?.cover_image);
                 const street = row.address?.street;
                 const d = row.detail;
                 const st = announcementStatusLabel(row.status);
@@ -147,15 +166,7 @@ export default function DashboardMyPropertiesClient() {
                       <div className="w-[500px] shrink-0">
                         <div className="flex items-stretch gap-5">
                           <div className="h-auto min-h-[128.57px] w-[150px] shrink-0 overflow-hidden self-stretch rounded-xl">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={imgSrc}
-                              alt=""
-                              className="block h-full w-full object-cover object-center"
-                              onError={(e) => {
-                                e.currentTarget.src = PLACEHOLDER_IMG;
-                              }}
-                            />
+                            <DashboardPropertyThumb src={imgSrc} />
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="mb-1 mt-[15px] text-[19px] font-medium leading-7 text-[var(--Third)]">

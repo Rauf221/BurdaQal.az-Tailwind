@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ImageOff } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { BLOG_LIST, blogPostPath } from "@/lib/blogRoutes";
 import { Link } from "@/i18n/navigation";
@@ -47,18 +47,28 @@ export default function BlogSingle({ slug }: { slug: string }) {
   }
 
   const descriptionIsHtml = /<[a-z][\s\S]*>/i.test(post.description);
+  const heroImage = post.image || post.thumb_image;
 
   return (
     <Layout headerStyle={12} mainContentCls="p-5">
       <div className="blog-single-wrap">
         <FadeIn>
-          <div className="image-head mx-auto mb-10 w-full px-5 max-[991px]:px-0">
-            <img
-              src={post.image || post.thumb_image}
-              alt={post.title}
-              className="mx-auto block max-h-[700px] w-full rounded-3xl object-cover object-center max-[991px]:rounded-none"
-            />
-          </div>
+          {heroImage ? (
+            <div className="image-head mx-auto mb-10 w-full px-5 max-[991px]:px-0">
+              <img
+                src={heroImage}
+                alt={post.title}
+                className="mx-auto block max-h-[700px] w-full rounded-3xl object-cover object-center max-[991px]:rounded-none"
+              />
+            </div>
+          ) : (
+            <div
+              className="image-head mx-auto mb-10 flex min-h-[200px] w-full items-center justify-center bg-[#f0f0f0] px-5 max-[991px]:px-0"
+              aria-hidden
+            >
+              <ImageOff className="h-16 w-16 text-[var(--Text)]/30" strokeWidth={1.25} />
+            </div>
+          )}
         </FadeIn>
         <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
           <div className="mx-auto max-w-[920px]">
@@ -138,11 +148,20 @@ export default function BlogSingle({ slug }: { slug: string }) {
                   <FadeInStaggerItem key={item.slug} className="min-w-0">
                     <div className="wg-blog flex h-full flex-col overflow-hidden rounded-2xl transition-shadow hover:shadow-[0px_6px_15px_0px_#404F680D]">
                       <div className="image h-[200px] shrink-0 overflow-hidden">
-                        <img
-                          src={item.thumb_image || item.image}
-                          alt={item.title}
-                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
-                        />
+                        {item.thumb_image || item.image ? (
+                          <img
+                            src={item.thumb_image || item.image}
+                            alt={item.title}
+                            className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
+                          />
+                        ) : (
+                          <div
+                            className="flex h-full w-full items-center justify-center bg-[#f0f0f0] text-[var(--Text)]/30"
+                            aria-hidden
+                          >
+                            <ImageOff className="h-10 w-10" strokeWidth={1.25} />
+                          </div>
+                        )}
                       </div>
                       <div className="content flex flex-1 flex-col rounded-b-2xl border border-[var(--Border)] border-t-0 bg-[var(--White)] px-[25px] pt-[22px] pb-[30px] text-center">
                         <div className="sub-blog mb-[13px] flex flex-wrap items-center justify-center gap-6">

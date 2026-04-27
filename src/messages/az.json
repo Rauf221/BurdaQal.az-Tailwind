@@ -184,7 +184,9 @@
     "loadingTitle": "Yüklənir",
     "errorCount": "0 elan",
     "errorTitle": "Xəta",
-    "propertyCount": "{count} elan"
+    "propertyCount": "{count} elan",
+    "prevSlide": "Əvvəlki rayonlar",
+    "nextSlide": "Növbəti rayonlar"
   },
   "flatNewsHome": {
     "title": "Faydalı məqalələr",
@@ -223,6 +225,7 @@
     "fallbackDescription": "Baxış tarixçənizə əsasən"
   },
   "headerUser": {
+    "loginCta": "Giriş",
     "loginRegister": "Daxil ol / Qeydiyyat",
     "dashboard": "İdarə paneli",
     "myProfile": "Profilim",
@@ -385,7 +388,6 @@
     "featureOutdoor": "Xarici detallar",
     "featureUtilities": "Kommunal xidmətlər",
     "featureOther": "Digər üstünlüklər",
-    "saveListing": "Saxla",
     "overviewTitle": "Ümumi baxış",
     "tagListing": "ELAN",
     "tagFeatured": "SEÇİLMİŞ",

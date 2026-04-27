@@ -9,6 +9,7 @@ import { routing } from "@/i18n/routing";
 import { useLogoutMutation } from "@/services/client/auth/mutations";
 import { getUserProfileQuery } from "@/services/client/auth/queries";
 import { pickUserDisplay } from "@/services/client/auth/userDisplay";
+import ReverseHoverHeaderLoginPill from "@/components/elements/ReverseHoverHeaderLoginPill";
 
 export type HeaderUserNavProps = {
   handleLogin: () => void;
@@ -57,7 +58,6 @@ export default function HeaderUserNav({
 }: HeaderUserNavProps) {
   const locale = useLocale();
   const t = useTranslations("headerUser");
-  const tc = useTranslations("common");
   const isAuthed = useAuthSession();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -169,18 +169,11 @@ export default function HeaderUserNav({
 
   if (!isAuthed) {
     return (
-      <button
-        type="button"
+      <ReverseHoverHeaderLoginPill
+        label={t("loginCta")}
         onClick={handleLogin}
-        className={
-          "header-user header-user--btn box-border flex h-[41px] w-[41px] shrink-0 cursor-pointer items-center justify-center rounded-full border bg-transparent shadow-none appearance-none " +
-          ring
-        }
-      >
-        <div className="icon flex items-center justify-center">
-          <UserIcon />
-        </div>
-      </button>
+        inverse={inverse}
+      />
     );
   }
 

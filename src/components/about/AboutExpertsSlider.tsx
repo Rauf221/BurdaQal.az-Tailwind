@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, User } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { resolveMediaUrl } from "@/lib/media-url";
@@ -50,18 +50,27 @@ export default function AboutExpertsSlider() {
         ? members.map((member, i) => {
             const rawImg = member.image || member.thumb_image;
             const img = rawImg
-              ? resolveMediaUrl(apiBase(), rawImg) || rawImg
-              : "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80";
+              ? (resolveMediaUrl(apiBase(), rawImg) || rawImg)
+              : null;
             const href = toExternalHref(member.link);
             return (
               <SwiperSlide key={`${member.name}-${i}`}>
                 <div className="group experts-item">
                   <div className="image relative mb-[23px] overflow-hidden rounded-2xl">
-                    <img
-                      src={img}
-                      alt={member.name || ""}
-                      className="w-full transition-transform duration-700 group-hover:scale-110"
-                    />
+                    {img ? (
+                      <img
+                        src={img}
+                        alt={member.name || ""}
+                        className="w-full transition-transform duration-700 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div
+                        className="flex aspect-[4/3] w-full items-center justify-center bg-[#e8e8e8] text-[var(--Text)]/25"
+                        aria-hidden
+                      >
+                        <User className="h-20 w-20" strokeWidth={1.25} />
+                      </div>
+                    )}
                     <ul className="pointer-events-none absolute left-1/2 top-1/2 m-0 list-none p-0 opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:top-1/2 group-hover:opacity-100">
                       <li>
                         <a

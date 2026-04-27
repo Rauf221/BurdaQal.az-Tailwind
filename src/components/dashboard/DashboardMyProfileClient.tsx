@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight, Upload, X } from "lucide-react";
+import { ArrowRight, Upload, User, X } from "lucide-react";
 import OtpSixDigitBlock from "@/components/elements/OtpSixDigitBlock";
 import { useAuthSession } from "@/lib/auth/useAuthSession";
 import { getAxiosErrorMessage } from "@/services/client/auth/apiMessage";
@@ -19,9 +19,6 @@ import {
 } from "@/services/client/auth/profileParse";
 import { getUserProfileQuery } from "@/services/client/auth/queries";
 import { FadeIn } from "@/components/motion";
-
-const PLACEHOLDER_AVATAR =
-  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&q=80";
 
 const wgBoxCls =
   "mb-20 rounded-3xl border border-[var(--Border)] bg-[var(--White)] py-[39px] pr-[39px] pl-11 last:mb-0";
@@ -104,7 +101,7 @@ export default function DashboardMyProfileClient() {
   const passwordMutation = usePasswordChangeMutation(locale);
 
   const resolvedServer = resolveUserMediaUrl(serverImagePath);
-  const avatarSrc = imagePreview || resolvedServer || PLACEHOLDER_AVATAR;
+  const avatarSrc = imagePreview || resolvedServer;
 
   const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] ?? null;
@@ -305,11 +302,20 @@ export default function DashboardMyProfileClient() {
 
           <div className="flex flex-wrap items-start gap-8 gap-y-6">
             <div className="relative h-[150px] w-[150px] shrink-0">
-              <img
-                src={avatarSrc}
-                alt=""
-                className="h-full w-full rounded-full object-cover"
-              />
+              {avatarSrc ? (
+                <img
+                  src={avatarSrc}
+                  alt=""
+                  className="h-full w-full rounded-full object-cover"
+                />
+              ) : (
+                <div
+                  className="flex h-full w-full items-center justify-center rounded-full bg-[#e8e8e8] text-[var(--Text)]/40"
+                  aria-hidden
+                >
+                  <User className="h-16 w-16" strokeWidth={1.5} />
+                </div>
+              )}
               <div
                 className="pointer-events-none absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--Border)] bg-[var(--White)] shadow-sm"
                 aria-hidden

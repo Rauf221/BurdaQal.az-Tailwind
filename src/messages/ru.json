@@ -184,7 +184,9 @@
     "loadingTitle": "Загрузка",
     "errorCount": "0 объектов",
     "errorTitle": "Ошибка",
-    "propertyCount": "{count} объектов"
+    "propertyCount": "{count} объектов",
+    "prevSlide": "Предыдущие районы",
+    "nextSlide": "Следующие районы"
   },
   "flatNewsHome": {
     "title": "Полезные статьи",
@@ -223,6 +225,7 @@
     "fallbackDescription": "На основе вашей истории просмотров"
   },
   "headerUser": {
+    "loginCta": "Вход",
     "loginRegister": "Вход / Регистрация",
     "dashboard": "Кабинет",
     "myProfile": "Мой профиль",
@@ -385,7 +388,6 @@
     "featureOutdoor": "Экстерьер",
     "featureUtilities": "Коммуникации",
     "featureOther": "Другое",
-    "saveListing": "Сохранить",
     "overviewTitle": "Обзор",
     "tagListing": "ОБЪЯВЛЕНИЕ",
     "tagFeatured": "ИЗБРАННОЕ",

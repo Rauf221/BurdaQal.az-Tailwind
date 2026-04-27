@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import { ChevronDown, Search, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, ImageOff, Search, SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { EffectFade, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -100,8 +100,7 @@ export default function SliderHome7() {
       {
         title: t("fallbackTitle"),
         description: t("fallbackDescription"),
-        image:
-          "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80",
+        image: "",
         thumb_image: "",
         btn: t("fallbackBtn"),
         btn_link: "/elanlar",
@@ -109,8 +108,7 @@ export default function SliderHome7() {
       {
         title: t("fallbackTitle"),
         description: t("fallbackDescription"),
-        image:
-          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
+        image: "",
         thumb_image: "",
         btn: t("fallbackBtn"),
         btn_link: "/elanlar",
@@ -118,8 +116,7 @@ export default function SliderHome7() {
       {
         title: t("fallbackTitle"),
         description: t("fallbackDescription"),
-        image:
-          "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1920&q=80",
+        image: "",
         thumb_image: "",
         btn: t("fallbackBtn"),
         btn_link: "/elanlar",
@@ -138,7 +135,6 @@ export default function SliderHome7() {
     return groupAttributesByParent(raw);
   }, [attributesQ.data?.data]);
   const previewItems = (previewQ.data?.data ?? []).slice(0, 4);
-  const fallbackPreview = "/images/author/avatar-8.png";
   const searchTrimmed = filters.search.trim();
   const hasSearchQuery = searchTrimmed.length > 0;
 
@@ -203,14 +199,21 @@ export default function SliderHome7() {
           {slides.map((item, idx) => {
             const img = item.image || item.thumb_image;
             return (
-              <SwiperSlide key={`${img}-${idx}`}>
+              <SwiperSlide key={`home7-slide-${idx}`}>
                 <div className="wrap-slider relative bg-[var(--jh-cream)]">
                   <div className="image absolute inset-0">
-                    <img
-                      src={img}
-                      alt={item.title?.replace(/\n/g, " ") || ""}
-                      className="h-full w-full object-cover"
-                    />
+                    {img ? (
+                      <img
+                        src={img}
+                        alt={item.title?.replace(/\n/g, " ") || ""}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div
+                        className="h-full w-full bg-gradient-to-br from-[#2a3a28] via-[#1a1a18] to-[#0a0a0a]"
+                        aria-hidden
+                      />
+                    )}
                   </div>
                   <div
                     className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(26,26,26,0.8)_0%,rgba(26,26,26,0.1)_61.39%,rgba(26,26,26,0)_100%)]"
@@ -240,11 +243,11 @@ export default function SliderHome7() {
       </div>
 
       <form
-        className="form-search-home5 background-secondary relative z-50 mx-auto -mt-[48px] flex max-w-[1162px] flex-col items-stretch gap-6 overflow-visible rounded-[24px] bg-[var(--Secondary)] px-5 py-5 md:flex-row md:items-end md:gap-[50px] md:px-[30px] md:py-[19px]"
+        className="form-search-home5 background-secondary relative z-50 mx-auto -mt-[48px] flex max-w-[1162px] flex-col items-stretch gap-6 overflow-visible rounded-[24px] bg-[var(--Secondary)] px-5 py-5 md:flex-row md:flex-nowrap md:items-end md:gap-6 md:px-[30px] md:py-[19px] xl:gap-[50px]"
         onSubmit={onSubmit}
       >
-        <div className="list mt-0 flex w-full flex-grow flex-col gap-5  md:flex-row md:items-end md:gap-[30px] ">
-          <div className="group-form form-search-content w-full md:min-w-0 md:max-w-[360px] md:flex-1 lg:max-w-[400px]">
+        <div className="list mt-0 flex w-full flex-grow flex-col gap-5 md:flex-row md:flex-nowrap md:items-end md:gap-5 xl:gap-[30px]">
+          <div className="group-form form-search-content w-full md:flex-1 md:basis-[240px] md:min-w-0 md:max-w-none lg:basis-[320px] lg:max-w-[400px]">
             <div className="form-style-has-title">
               <div className="title mb-[5px] text-[13px] font-normal leading-[15px] text-[#8b8b8b]">
                 {t("searchLabel")}
@@ -254,7 +257,7 @@ export default function SliderHome7() {
                   <input
                     type="text"
                     placeholder={t("searchPlaceholder")}
-                    className="show-search style-default h-[26px] lg:w-[390px] border-0 bg-transparent p-0 pr-11 text-[15px] font-medium leading-[26px] text-[var(--White)] outline-none placeholder:font-normal placeholder:text-white/75"
+                    className="show-search style-default h-[26px] w-full border-0 bg-transparent p-0 pr-11 text-[15px] font-medium leading-[26px] text-[var(--White)] outline-none placeholder:font-normal placeholder:text-white/75"
                     name="search"
                     value={filters.search}
                     onChange={(e) =>
@@ -276,18 +279,23 @@ export default function SliderHome7() {
                     </p>
                   ) : previewItems.length > 0 ? (
                     <ul>
-                      {previewItems.map((row) => (
+                      {previewItems.map((row) => {
+                        const cover = publicStorageUrl(row.media?.cover_image);
+                        return (
                         <li key={row.id}>
                           <Link href={`/elanlar/${row.slug}`} className="item1">
                             <div>
                               <div className="image">
-                                <img
-                                  src={
-                                    publicStorageUrl(row.media?.cover_image) ||
-                                    fallbackPreview
-                                  }
-                                  alt={row.title || ""}
-                                />
+                                {cover ? (
+                                  <img src={cover} alt={row.title || ""} />
+                                ) : (
+                                  <div
+                                    className="flex h-full min-h-[48px] w-full items-center justify-center bg-[#e8e8e8] text-[var(--Text)]/30"
+                                    aria-hidden
+                                  >
+                                    <ImageOff className="h-5 w-5" strokeWidth={1.5} />
+                                  </div>
+                                )}
                               </div>
                               <p>{row.title}</p>
                             </div>
@@ -296,7 +304,8 @@ export default function SliderHome7() {
                             </div>
                           </Link>
                         </li>
-                      ))}
+                        );
+                      })}
                     </ul>
                   ) : showSearchEmpty ? (
                     <p className="slider-home7-search-dropdown-status m-0 px-3 py-6 text-center text-[15px] font-medium text-[var(--Secondary)]">
@@ -308,7 +317,7 @@ export default function SliderHome7() {
             </div>
           </div>
           <div className="divider-1 hidden h-[36px] w-px shrink-0 bg-white/10 md:block" />
-          <div className="group-form w-full md:w-[126px]">
+          <div className="group-form w-full shrink-0 md:w-[110px] lg:w-[126px] xl:w-[140px]">
             <div className="form-style-has-title">
               <div className="title mb-[5px] text-[13px] font-normal leading-[15px] text-[#8b8b8b]">
                 {t("region")}
@@ -340,7 +349,7 @@ export default function SliderHome7() {
             </div>
           </div>
           <div className="divider-1 hidden h-[36px] w-px shrink-0 bg-white/10 md:block" />
-          <div className="group-form w-full md:w-[126px]">
+          <div className="group-form w-full shrink-0 md:w-[110px] lg:w-[126px] xl:w-[140px]">
             <div className="form-style-has-title">
               <div className="title mb-[5px] text-[13px] font-normal leading-[15px] text-[#8b8b8b]">
                 {t("category")}
@@ -373,13 +382,13 @@ export default function SliderHome7() {
           </div>
         </div>
 
-        <div className="slider-home7-form-actions flex w-full shrink-0 flex-row items-stretch gap-2.5 md:gap-5">
+        <div className="slider-home7-form-actions flex w-full shrink-0 flex-row items-stretch gap-2.5 md:w-auto md:gap-2.5 lg:gap-5">
           <div className="group-form shrink-0">
             <div className="wg-filter relative z-[15]">
               <button
                 ref={filterButtonRef}
                 type="button"
-                className={`tf-button-filter btn-filter flex min-h-[52px] cursor-pointer items-center justify-center gap-2.5 rounded-xl border px-[30px] py-4 text-[15px] font-medium leading-[18px] text-[var(--White)] transition-colors ${filterOpen ? "border-white/40" : "border-white/15"}`}
+                className={`tf-button-filter btn-filter flex min-h-[52px] cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl border px-4 py-4 text-[15px] font-medium leading-[18px] text-[var(--White)] transition-colors lg:gap-2.5 lg:px-6 xl:px-[30px] ${filterOpen ? "border-white/40" : "border-white/15"}`}
                 onClick={() => setFilterOpen((v) => !v)}
               >
                 <SlidersHorizontal className="h-[18px] w-[18px] shrink-0" strokeWidth={1.75} />
@@ -387,11 +396,11 @@ export default function SliderHome7() {
               </button>
             </div>
           </div>
-          <div className="group-form min-w-0 sm:flex-1 lg:flex-none">
+          <div className="group-form min-w-0 flex-1 md:w-[120px] md:flex-none lg:w-[140px] xl:w-[150px]">
             <div className="button-submit">
               <button
                 type="submit"
-                className="flex min-h-[52px] w-full items-center justify-center rounded-xl bg-[var(--Primary)] px-[30px] py-[19px] text-[15px] font-medium leading-[17px] text-[var(--White)] transition-[filter] hover:brightness-[0.96]"
+                className="flex min-h-[52px] w-full items-center justify-center whitespace-nowrap rounded-xl bg-[var(--Primary)] px-5 py-[19px] text-[15px] font-medium leading-[17px] text-[var(--White)] transition-[filter] hover:brightness-[0.96] lg:px-6 xl:px-[30px]"
               >
                 {t("submitCta")}
               </button>

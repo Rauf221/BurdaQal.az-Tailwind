@@ -2,27 +2,22 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight, Bath, Bed, LayoutGrid, MapPin } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { Link } from "@/i18n/navigation";
-import { announcementsListQuery, publicStorageUrl } from "@/services/client/properties";
+import ElanlarCard from "@/components/elements/ElanlarCard";
+import { announcementCardImages } from "@/components/elanlar/announcementCardImages";
+import { announcementsListQuery } from "@/services/client/properties";
 import { categoriesListQuery } from "@/services/dashboard/Add-New-Properties/queries";
 
-const PLACEHOLDER_IMG =
-  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80";
-
-function cardImage(media: {
-  cover_image?: string | null;
-  gallery?: string[] | null;
-} | null) {
-  const first = media?.cover_image || media?.gallery?.[0];
-  const url = first ? publicStorageUrl(first) : null;
-  return url || PLACEHOLDER_IMG;
-}
+/** Bu bölmədə göstəriləcək maksimum elan kartı sayı */
+export const WORK_WITH_US_HOME_MAX_CARDS = 6;
 
 export default function WorkWithUsHome() {
   const locale = useLocale();
   const t = useTranslations("workWithUsHome");
+  const tListings = useTranslations("listings");
+  const tc = useTranslations("common");
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const categoriesQ = useQuery(categoriesListQuery(locale));
   const categories = categoriesQ.data?.data ?? [];
@@ -31,7 +26,7 @@ export default function WorkWithUsHome() {
       ...(selectedCategoryId ? { category_id: selectedCategoryId } : {}),
     })
   );
-  const items = (q.data?.data ?? []).slice(0, 6);
+  const items = (q.data?.data ?? []).slice(0, WORK_WITH_US_HOME_MAX_CARDS);
 
   const tabActiveClass =
     "active border-[var(--Secondary)] bg-[var(--jh-cream)]";
@@ -101,7 +96,7 @@ export default function WorkWithUsHome() {
 
           <div className="widget-content-tab">
             <div className="widget-content-inner active">
-              <div className="grid grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-4">
                 {q.isError ? (
                   <div className="py-2">
                     <p className="text-[var(--Text)]">{t("listingsError")}</p>
@@ -117,70 +112,28 @@ export default function WorkWithUsHome() {
                 ) : (
                   items.map((row) => {
                     const d = row.detail;
-                    const street = row.address?.street || "-";
+                    const street = row.address?.street;
                     const detailHref = `/elanlar/${row.slug}`;
                     return (
-                      <div key={row.id}>
-                        <div className="box-dream style-absolute type-no-bg-content relative mb-[30px] overflow-hidden rounded-2xl bg-[var(--White)] pt-0 transition-shadow duration-300 hover:shadow-[0px_6px_15px_0px_#404F680D]">
-                          <div className="image relative m-0 h-[410px] overflow-hidden rounded-none">
-                            <div className="list-tags absolute left-5 top-5 z-[2] flex gap-2.5">
-                              <Link
-                                href="/elanlar"
-                                className="tags-item for-sell rounded-[120px] bg-[var(--Fourth)] px-[15px] py-2 text-[13px] font-medium leading-[15px] text-[var(--White)]"
-                              >
-                                {t("tagListing")}
-                              </Link>
-                            </div>
-                            <div className="absolute inset-0 z-[5] bg-[linear-gradient(180deg,rgba(26,26,26,0)_0%,rgba(26,26,26,0.1)_61.39%,rgba(26,26,26,0.8)_100%)]" />
-                            <img
-                              className="relative z-[1] block min-h-[286px] w-full object-cover"
-                              src={cardImage(row.media)}
-                              alt={row.title || ""}
-                            />
-                          </div>
-                          <div className="content absolute bottom-5 left-[22px] right-[22px] z-10 box-border w-auto rounded-lg bg-transparent px-[22px] py-4">
-                            <div className="head mb-2.5">
-                              <div className="title max-w-[270px] overflow-hidden text-ellipsis whitespace-nowrap text-[19px] font-medium leading-7 text-[var(--White)]">
-                                <Link href={detailHref} className="text-[var(--White)]">
-                                  {row.title}
-                                </Link>
-                              </div>
-                            </div>
-                            <div className="location mb-[15px] flex items-start gap-2.5">
-                              <div className="icon text-[var(--White)]">
-                                <MapPin className="h-5 w-5" />
-                              </div>
-                              <p className="m-0 overflow-hidden text-ellipsis whitespace-nowrap text-base leading-6 text-[var(--White)]">
-                                {street}
-                              </p>
-                            </div>
-                            <div className="flex min-w-0 items-center justify-between gap-3.5">
-                              <div className="icon-box flex min-w-0 flex-1 items-center gap-[31px]">
-                                <div className="item relative flex items-center gap-2.5 text-[var(--White)] after:absolute after:-right-4 after:h-5 after:w-px after:bg-[var(--White)] after:opacity-30 last:after:hidden">
-                                  <Bed className="h-5 w-5 shrink-0" />
-                                  <p className="m-0 text-[15px] leading-7 text-[var(--White)]">
-                                    {d ? d.bedroom : "-"}
-                                  </p>
-                                </div>
-                                <div className="item relative flex items-center gap-2.5 text-[var(--White)] after:absolute after:-right-4 after:h-5 after:w-px after:bg-[var(--White)] after:opacity-30 last:after:hidden">
-                                  <Bath className="h-5 w-5 shrink-0" />
-                                  <p className="m-0 text-[15px] leading-7 text-[var(--White)]">
-                                    {d ? d.bathroom : "-"}
-                                  </p>
-                                </div>
-                                <div className="item flex items-center gap-2.5 text-[var(--White)]">
-                                  <LayoutGrid className="h-5 w-5 shrink-0" />
-                                  <p className="m-0 text-[15px] leading-7 text-[var(--White)]">
-                                    {d ? d.room : "-"}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="price shrink-0 whitespace-nowrap text-right text-[19px] font-medium leading-7 text-[var(--White)]">
-                                {row.price ? `${row.price} AZN` : "-"}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                      <div key={row.id} className="min-w-0 flex justify-center">
+                        <ElanlarCard
+                          href={detailHref}
+                          title={row.title ?? ""}
+                          imageAlt={row.title ?? ""}
+                          priceLine={
+                            row.price
+                              ? tListings("priceAzn", { price: row.price })
+                              : tc("dash")
+                          }
+                          address={street || tc("dash")}
+                          beds={d?.bedroom ?? null}
+                          baths={d?.bathroom ?? null}
+                          rooms={d?.room ?? null}
+                          emptyLabel={tc("dash")}
+                          images={announcementCardImages(row.media)}
+                          autoplayOnHover
+                          className="w-full max-w-full"
+                        />
                       </div>
                     );
                   })

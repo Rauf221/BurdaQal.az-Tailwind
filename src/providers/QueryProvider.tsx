@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
+import { AppLoadingGate } from "@/providers/AppLoadingGate";
 
 /**
  * Brauzer geri/ileri (BFCache və popstate) bərpa edəndə sorğular bəzən yenilənmir.
@@ -51,7 +52,7 @@ export default function QueryProvider({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={client}>
       <RefetchOnHistoryRestore />
-      {children}
+      <AppLoadingGate>{children}</AppLoadingGate>
     </QueryClientProvider>
   );
 }

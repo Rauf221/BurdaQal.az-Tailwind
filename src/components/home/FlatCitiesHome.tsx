@@ -2,32 +2,109 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import "swiper/css/navigation";
 import { Link } from "@/i18n/navigation";
 import { getRandomRegionsQuery } from "@/services/client/home/queries";
+import type { RandomRegionItem } from "@/types";
+
+/** Figma: 2007:312 — default; 2049:5002 — hover (mərkəzi ox). */
+const SWIPER_FROM_COUNT = 5;
 
 const sliderCities2 = {
+  modules: [Navigation],
   spaceBetween: 25,
-  slidesPerView: 5,
+  slidesPerView: "auto" as const,
   observer: true,
   observeParents: true,
   breakpoints: {
-    0: { slidesPerView: 1.15 },
-    600: { slidesPerView: 2 },
-    991: { slidesPerView: 4 },
-    1440: { slidesPerView: 5 },
+    0: { spaceBetween: 16 },
+    600: { spaceBetween: 25 },
+  },
+  navigation: {
+    prevEl: ".flat-cities-prev",
+    nextEl: ".flat-cities-next",
+    clickable: true,
   },
 };
 
-const FALLBACK_CITY_IMAGES = [
-  "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&q=80",
-  "https://images.unsplash.com/photo-1514565131-fce0801e5785?w=800&q=80",
-  "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80",
-  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80",
-  "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80",
-];
+/** API-də şəkil yoxdursa — yalnız lokal rəng keçidləri, xarici şəkil yoxdur */
+const CITY_PLACEHOLDER_GRADIENTS = [
+  "bg-gradient-to-br from-[#2a3a28] to-[#121512]",
+  "bg-gradient-to-br from-[#283440] to-[#12181c]",
+  "bg-gradient-to-br from-[#3a3028] to-[#1a1512]",
+  "bg-gradient-to-br from-[#2a3038] to-[#121418]",
+  "bg-gradient-to-br from-[#283828] to-[#121812]",
+] as const;
+
+/** Kart hover (sm+) → ox; mobilde yalnız statik kadr (Figma: 2007/2049) */
+function CenterArrowCta() {
+  return (
+    <div
+      className="pointer-events-none absolute left-1/2 top-1/2 z-2 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-200 ease-out sm:group-hover:pointer-events-auto sm:group-hover:opacity-100 sm:group-focus-visible:pointer-events-auto sm:group-focus-visible:opacity-100"
+      aria-hidden
+    >
+      <div className="group/icon flex h-12 w-12 items-center justify-center rounded-full border border-white bg-[rgba(0,0,0,0.4)] p-3">
+        <ArrowUpRight
+          className="h-6 w-6 shrink-0 text-white transition-transform duration-200 ease-out sm:group-hover/icon:scale-[1.15]"
+          strokeWidth={2}
+        />
+      </div>
+    </div>
+  );
+}
+
+/** Figma 268×290 — əvvəlki ölçü; dar ekranda üfüqi sürüşdürmə, aşağı sətir yox */
+const cardClass =
+  "group relative block h-[290px] w-[268px] min-w-[250px] max-w-[220px] shrink-0 overflow-hidden rounded-2xl";
+const slideW = "!w-[268px] !min-w-[268px] !max-w-[268px]";
+const staticRowClass =
+  "flex w-full min-w-0 flex-nowrap justify-start gap-x-4 overflow-x-auto overflow-y-visible py-1 sm:gap-x-6";
+const swiperShellClass = "w-full min-w-0";
+
+/** Swiper 12 oxu `::after` deyil — `svg.swiper-navigation-icon`; default 100%×100% doldurur; yalnız ikon üçün ölçü */
+const flatCitiesSwiperNavSvg =
+  "[&_svg.swiper-navigation-icon]:!block [&_svg.swiper-navigation-icon]:!h-[20px] [&_svg.swiper-navigation-icon]:!w-[10.5px] [&_svg.swiper-navigation-icon]:shrink-0";
+
+function RegionCityCard({ region, idx }: { region: RandomRegionItem; idx: number }) {
+  const t = useTranslations("flatCitiesHome");
+  return (
+    <Link
+      href={`/elanlar?region=${encodeURIComponent(region.slug)}`}
+      className={`${cardClass} block`}
+    >
+      {region.image ? (
+        <img
+          src={region.image}
+          alt={region.name}
+          className="absolute inset-0 size-full max-w-none rounded-2xl object-cover transition-transform duration-500 ease-out sm:group-hover:scale-110 sm:group-focus-visible:scale-110"
+        />
+      ) : (
+        <div
+          className={`absolute inset-0 min-h-full rounded-2xl ${CITY_PLACEHOLDER_GRADIENTS[idx % CITY_PLACEHOLDER_GRADIENTS.length]}`}
+          aria-hidden
+        />
+      )}
+      <div
+        className="pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-t from-transparent to-[rgba(0,0,0,0.5)]"
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[rgba(0,0,0,0.32)] max-sm:opacity-0! opacity-0 transition-opacity duration-500 ease-out sm:group-hover:opacity-100 sm:group-focus-visible:opacity-100" />
+      <div className="absolute left-5 top-5 z-[1] flex flex-col gap-1 text-white not-italic ">
+        <p className="text-sm font-medium leading-5">
+          {t("propertyCount", {
+            count: region.announcements_count ?? 0,
+          })}
+        </p>
+        <p className="text-xl font-semibold leading-6">{region.name}</p>
+      </div>
+      <CenterArrowCta />
+    </Link>
+  );
+}
 
 export default function FlatCitiesHome() {
   const locale = useLocale();
@@ -36,6 +113,7 @@ export default function FlatCitiesHome() {
     getRandomRegionsQuery(locale)
   );
   const regions = regionsPayload?.data ?? [];
+  const useSwiper = !isPending && !isError && regions.length >= SWIPER_FROM_COUNT;
 
   return (
     <section className="tf-section flat-cities style-4 pb-0 pt-[114px]">
@@ -53,92 +131,81 @@ export default function FlatCitiesHome() {
           </div>
         </div>
         <div className="row -mx-[14px]">
-          <div className="col-12 px-[14px]">
-            <div className="wrap">
-              <div className="slider-cities-2">
-                <Swiper {...sliderCities2}>
-                  {isPending ? (
-                    <SwiperSlide>
-                      <div className="cities-item style-2 group relative mb-0 h-[300px] overflow-hidden rounded-2xl">
-                        <img
-                          src={FALLBACK_CITY_IMAGES[0]}
-                          alt=""
-                          className="h-full w-full object-cover transition-transform duration-700 hover:scale-110"
-                        />
-                        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(26,26,26,0.8)_0%,rgba(26,26,26,0.1)_61.39%,rgba(26,26,26,0)_100%)]" />
-                        <div className="absolute left-[30px] top-[27px] z-[3]">
-                          <p className="mb-1.5 text-[13px] font-normal leading-[15px] text-[var(--White)]">
-                            {t("loadingSub")}
-                          </p>
-                          <h4 className="text-[19px] font-medium leading-7 text-[var(--White)]">
-                            {t("loadingTitle")}
-                          </h4>
-                        </div>
-                        <Link
-                          href="/elanlar"
-                          className="button-arrow-right absolute bottom-10 left-[30px] z-10 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[var(--White)] opacity-0 transition-all hover:opacity-100 group-hover:opacity-100"
-                        >
-                          <ArrowRight className="h-[18px] w-[18px] text-[var(--Secondary)]" />
-                        </Link>
+          <div className="col-12 min-w-0 px-[14px]">
+            <div className="wrap min-w-0">
+              <div className="slider-cities-2 min-w-0">
+                {isPending ? (
+                  <div className={staticRowClass}>
+                    <div className={cardClass}>
+                      <div
+                        className={`absolute inset-0 min-h-full ${CITY_PLACEHOLDER_GRADIENTS[0]}`}
+                        aria-hidden
+                      />
+                      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[rgba(0,0,0,0.32)]" />
+                      <div className="absolute left-5 top-5 z-[1] flex flex-col gap-1 text-white not-italic">
+                        <p className="text-sm font-medium leading-5">
+                          {t("loadingSub")}
+                        </p>
+                        <p className="text-xl font-semibold leading-6">
+                          {t("loadingTitle")}
+                        </p>
                       </div>
-                    </SwiperSlide>
-                  ) : isError ? (
-                    <SwiperSlide>
-                      <div className="cities-item style-2 group relative mb-0 h-[300px] overflow-hidden rounded-2xl">
-                        <img
-                          src={FALLBACK_CITY_IMAGES[0]}
-                          alt=""
-                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(26,26,26,0.8)_0%,rgba(26,26,26,0.1)_61.39%,rgba(26,26,26,0)_100%)]" />
-                        <div className="absolute left-[30px] top-[27px] z-[3]">
-                          <p className="mb-1.5 text-[13px] text-[var(--White)]">
-                            {t("errorCount")}
-                          </p>
-                          <h4 className="text-[19px] font-medium text-[var(--White)]">
-                            {t("errorTitle")}
-                          </h4>
-                        </div>
-                        <Link
-                          href="/elanlar"
-                          className="button-arrow-right absolute bottom-10 left-[30px] z-10 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[var(--White)] opacity-0 transition-all group-hover:opacity-100"
-                        >
-                          <ArrowRight className="h-[18px] w-[18px] text-[var(--Secondary)]" />
-                        </Link>
+                    </div>
+                  </div>
+                ) : isError ? (
+                  <div className={staticRowClass}>
+                    <Link href="/elanlar" className={`${cardClass} block`}>
+                      <div
+                        className={`absolute inset-0 min-h-full ${CITY_PLACEHOLDER_GRADIENTS[0]}`}
+                        aria-hidden
+                      />
+                      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[rgba(0,0,0,0.32)]" />
+                      <div className="absolute left-5 top-5 z-[1] flex flex-col gap-1 text-white not-italic">
+                        <p className="text-sm font-medium leading-5">
+                          {t("errorCount")}
+                        </p>
+                        <p className="text-xl font-semibold leading-6">
+                          {t("errorTitle")}
+                        </p>
                       </div>
-                    </SwiperSlide>
-                  ) : (
-                    regions.map((region, idx) => (
-                      <SwiperSlide key={region.id}>
-                        <div className="cities-item style-2 group relative mb-0 h-[300px] overflow-hidden rounded-2xl">
-                          <img
-                            src={
-                              region.image ||
-                              FALLBACK_CITY_IMAGES[idx % FALLBACK_CITY_IMAGES.length]
-                            }
-                            alt={region.name}
-                            className="h-[300px] w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                          />
-                          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(26,26,26,0.8)_0%,rgba(26,26,26,0.1)_61.39%,rgba(26,26,26,0)_100%)]" />
-                          <div className="absolute left-[30px] top-[27px] z-[3]">
-                            <p className="mb-1.5 text-[13px] font-normal leading-[15px] text-[var(--White)]">
-                              {t("propertyCount", { count: region.announcements_count ?? 0 })}
-                            </p>
-                            <h4 className="text-[19px] font-medium leading-7 text-[var(--White)]">
-                              {region.name}
-                            </h4>
-                          </div>
-                          <Link
-                            href={`/elanlar?region=${encodeURIComponent(region.slug)}`}
-                            className="button-arrow-right absolute bottom-10 left-[30px] z-10 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[var(--White)] opacity-0 transition-all group-hover:opacity-100"
-                          >
-                            <ArrowRight className="h-[18px] w-[18px] text-[var(--Secondary)]" />
-                          </Link>
-                        </div>
-                      </SwiperSlide>
-                    ))
-                  )}
-                </Swiper>
+                      <CenterArrowCta />
+                    </Link>
+                  </div>
+                ) : useSwiper ? (
+                  <div className="flat-cities-swiper">
+                    <Swiper {...sliderCities2} className={swiperShellClass}>
+                      {regions.map((region, idx) => (
+                        <SwiperSlide key={region.id} className={slideW}>
+                          <RegionCityCard region={region} idx={idx} />
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                    <div className="mt-8 flex items-center justify-center gap-6 sm:mt-10 sm:gap-5">
+                      <div
+                        className={`flat-cities-prev swiper-button-prev !static !left-auto !right-auto !top-auto mt-0 !h-11 !w-11 -translate-y-0 rounded-full border border-jh-border bg-jh-white  ${flatCitiesSwiperNavSvg}`}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={t("prevSlide")}
+                      />
+                      <div
+                        className={`flat-cities-next swiper-button-next !static !left-auto !right-auto !top-auto mt-0 !h-11 !w-11 -translate-y-0 rounded-full border border-jh-border bg-jh-white ${flatCitiesSwiperNavSvg}`}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={t("nextSlide")}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className={staticRowClass}>
+                    {regions.map((region, idx) => (
+                      <RegionCityCard
+                        key={region.id}
+                        region={region}
+                        idx={idx}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

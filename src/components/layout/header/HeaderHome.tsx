@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import ReverseHoverLetterLink from "@/components/elements/ReverseHoverLetterLink";
 import { getAuthToken } from "@/lib/api/client";
 import HeaderUserNav from "@/components/elements/HeaderUserNav";
 import LocaleSwitcher from "@/components/elements/LocaleSwitcher";
@@ -106,9 +107,8 @@ export default function HeaderHome({
               accountMenuTheme="dark"
             />
             <div className="header-btn">
-              <Link
+              <ReverseHoverLetterLink
                 href="/dashboard-add-properties"
-                className="tf-button-default style-white inline-flex items-center justify-center gap-2.5 rounded-[120px] border border-white bg-transparent px-6 py-2.5 text-base font-medium leading-[19px] text-white transition-colors hover:bg-white hover:text-[var(--Secondary)]"
                 onClick={(e) => {
                   if (!getAuthToken()) {
                     e.preventDefault();
@@ -117,7 +117,7 @@ export default function HeaderHome({
                 }}
               >
                 {t("addListing")}
-              </Link>
+              </ReverseHoverLetterLink>
             </div>
           </div>
 

@@ -41,6 +41,8 @@ export type PublicAnnouncementMedia = {
 	cover_image: string
 	gallery: string[]
 	thumb_gallery: string[]
+	/** YouTube / video URL (bəzi cavablarda yalnız burada) */
+	link?: string | null
 }
 
 export type PublicAnnouncementAttribute = {

@@ -184,7 +184,9 @@
     "loadingTitle": "Loading",
     "errorCount": "0 listings",
     "errorTitle": "Error",
-    "propertyCount": "{count} listings"
+    "propertyCount": "{count} listings",
+    "prevSlide": "Previous districts",
+    "nextSlide": "Next districts"
   },
   "flatNewsHome": {
     "title": "Helpful articles",
@@ -223,6 +225,7 @@
     "fallbackDescription": "Based on your browsing history"
   },
   "headerUser": {
+    "loginCta": "Sign in",
     "loginRegister": "Sign in / Register",
     "dashboard": "Dashboard",
     "myProfile": "My profile",
@@ -385,7 +388,6 @@
     "featureOutdoor": "Outdoor details",
     "featureUtilities": "Utilities",
     "featureOther": "Other features",
-    "saveListing": "Save",
     "overviewTitle": "Overview",
     "tagListing": "LISTING",
     "tagFeatured": "FEATURED",

@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { ImageOff } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 
 type SliderBoxDreamProps = {
@@ -33,7 +34,30 @@ export default function SliderBoxDream({
   autoplayOnHover,
   onSwiperReady,
 }: SliderBoxDreamProps) {
+  const explicitEmpty = Array.isArray(images) && images.length === 0;
   const useRemoteImages = Array.isArray(images) && images.length > 0;
+
+  if (explicitEmpty) {
+    const voidInner = (
+      <div
+        className="flex h-full min-h-0 w-full min-w-0 items-center justify-center bg-[#f0f0f0] text-[var(--Text)]/35"
+        aria-hidden
+      >
+        <ImageOff className="h-10 w-10" strokeWidth={1.25} />
+      </div>
+    );
+    return (
+      <div className="slider-box-dream h-full min-h-0 w-full max-w-full">
+        {detailHref ? (
+          <Link href={detailHref} className="block h-full min-h-0 w-full">
+            {voidInner}
+          </Link>
+        ) : (
+          voidInner
+        )}
+      </div>
+    );
+  }
 
   const slideEntries = useMemo(() => {
     if (useRemoteImages) {

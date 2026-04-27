@@ -74,7 +74,7 @@ export function buildAnnouncementForClient(
   return {
     ...data,
     media: media
-      ? {
+        ? {
           ...media,
           cover_image: cover,
           gallery: slides,

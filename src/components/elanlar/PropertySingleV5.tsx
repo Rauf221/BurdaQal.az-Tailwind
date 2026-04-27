@@ -8,11 +8,12 @@ import {
   CalendarArrowDown,
   CalendarArrowUp,
   Check,
-  Heart,
+  ImageOff,
   LayoutGrid,
   MapPin,
   MessageCircle,
   Phone,
+  User,
 } from "lucide-react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -36,11 +37,6 @@ import type {
 } from "@/services/client/properties/api";
 
 import "@/styles/property-single-v5.css";
-
-const PLACEHOLDER_DETAIL =
-  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80";
-const PLACEHOLDER_AGENT =
-  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80";
 
 const DEFAULT_MAP_EMBED =
   "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2643.6895046810805!2d-122.52642526124438!3d38.00014098339506!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085976736097a2f%3A0xbe014d20e6e22654!2sSan+Rafael%2C+California%2C+Hoa+K%E1%BB%B3!5e0!3m2!1svi!2s!4v1678975266976!5m2!1svi!2s";
@@ -159,16 +155,35 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
     [announcement.attributes],
   );
 
-  const mainSlides =
-    media?.gallery && media.gallery.length > 0
-      ? media.gallery
-      : media?.cover_image
-        ? [media.cover_image]
-        : [PLACEHOLDER_DETAIL];
-  const thumbSlides =
-    media?.thumb_gallery && media.thumb_gallery.length >= mainSlides.length
-      ? media.thumb_gallery.slice(0, mainSlides.length)
-      : mainSlides;
+  const { mainSlides, thumbSlides } = useMemo(() => {
+    const raw =
+      media?.gallery && media.gallery.length > 0
+        ? media.gallery
+        : media?.cover_image
+          ? [media.cover_image]
+          : ([] as string[]);
+    const main = raw
+      .map((p) => publicStorageUrl(p))
+      .filter((u): u is string => u != null && u !== "");
+    if (main.length === 0) {
+      return { mainSlides: [] as string[], thumbSlides: [] as string[] };
+    }
+    if (media?.thumb_gallery && media.thumb_gallery.length >= raw.length) {
+      const thumbs = raw.map((_, i) => {
+        const t = publicStorageUrl(media.thumb_gallery![i]);
+        return t && t !== "" ? t : main[i]!;
+      });
+      return { mainSlides: main, thumbSlides: thumbs };
+    }
+    return { mainSlides: main, thumbSlides: main };
+  }, [media]);
+
+  const agentDisplayUrl = useMemo(() => {
+    const raw = user?.image && String(user.image).trim() !== "" ? String(user.image).trim() : null;
+    if (!raw) return null;
+    const u = publicStorageUrl(raw);
+    return u && u !== "" ? u : null;
+  }, [user?.image]);
 
   const locationLine = [address?.street].filter(Boolean).join(", ") || tc("dash");
 
@@ -178,10 +193,11 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
 
   const mapSrcFromApi = extractMapEmbedSrc(address?.map);
   const mapEmbedSrc = mapSrcFromApi || DEFAULT_MAP_EMBED;
-  const videoEmbedSrc = extractVideoEmbedSrc(announcement.video_youtube_url);
-
-  const agentImg =
-    user?.image && String(user.image).trim() !== "" ? user.image : PLACEHOLDER_AGENT;
+  const videoSource =
+    (announcement.video_youtube_url && String(announcement.video_youtube_url).trim()) ||
+    (media?.link && String(media.link).trim()) ||
+    "";
+  const videoEmbedSrc = extractVideoEmbedSrc(videoSource);
 
   return (
     <>
@@ -190,7 +206,7 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
           <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
             <div className="w-full px-[14px]">
               <FadeIn>
-                <div className="flex flex-wrap items-center justify-between gap-[30px] py-[30px]">
+                <div className="flex flex-wrap items-center justify-start gap-[30px] py-[30px]">
                 <ul className="breadcrumbs style-1 justify-start">
                   <li>
                     <Link href="/">{t("breadcrumbHome")}</Link>
@@ -202,14 +218,6 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                   <li>/</li>
                   <li>{title}</li>
                 </ul>
-                <div className="list-icons-page">
-                  <div className="item">
-                    <div className="icon">
-                      <Heart className="h-4 w-4 text-[var(--Secondary)]" strokeWidth={1.75} />
-                    </div>
-                    <p>{t("saveListing")}</p>
-                  </div>
-                </div>
                 </div>
               </FadeIn>
             </div>
@@ -238,55 +246,66 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
             <div className="w-full px-[14px]">
               <FadeIn delay={0.08}>
               <div className="thumbs-slider-column v5-thumbs arrow-style-1">
-                <Swiper
-                  modules={[FreeMode, Navigation, Thumbs]}
-                  spaceBetween={0}
-                  navigation={{
-                    nextEl: ".thumbs-next",
-                    prevEl: ".thumbs-prev",
-                  }}
-                  thumbs={{
-                    swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
-                  }}
-                  className="slider-thumbs-gallery-2"
-                >
-                  {mainSlides.map((src, idx) => (
-                    <SwiperSlide key={`main-${idx}`}>
-                      <div className="relative h-full min-h-[280px] md:min-h-[400px]">
-                        <div className="list-tags type-1">
-                          <span className="tags-item for-sell">{t("tagListing")}</span>
-                          <span className="tags-item featured">{t("tagFeatured")}</span>
-                        </div>
-                        <img src={src} alt="" className="h-full w-full object-cover" />
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                  <div className="swiper-button-next has-background thumbs-next" />
-                  <div className="swiper-button-prev has-background thumbs-prev" />
-                </Swiper>
+                {mainSlides.length > 0 ? (
+                  <>
+                    <Swiper
+                      modules={[FreeMode, Navigation, Thumbs]}
+                      spaceBetween={0}
+                      navigation={{
+                        nextEl: ".thumbs-next",
+                        prevEl: ".thumbs-prev",
+                      }}
+                      thumbs={{
+                        swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
+                      }}
+                      className="slider-thumbs-gallery-2"
+                    >
+                      {mainSlides.map((src, idx) => (
+                        <SwiperSlide key={`main-${idx}`}>
+                          <div className="relative h-full min-h-[280px] md:min-h-[400px]">
+                            <div className="list-tags type-1">
+                              <span className="tags-item for-sell">{t("tagListing")}</span>
+                              <span className="tags-item featured">{t("tagFeatured")}</span>
+                            </div>
+                            <img src={src} alt="" className="h-full w-full object-cover" />
+                          </div>
+                        </SwiperSlide>
+                      ))}
+                      <div className="swiper-button-next has-background thumbs-next" />
+                      <div className="swiper-button-prev has-background thumbs-prev" />
+                    </Swiper>
 
-                <Swiper
-                  modules={[FreeMode, Thumbs]}
-                  onSwiper={setThumbsSwiper}
-                  spaceBetween={10}
-                  slidesPerView={2}
-                  direction="vertical"
-                  freeMode
-                  watchSlidesProgress
-                  breakpoints={{
-                    450: { slidesPerView: 3 },
-                    768: { slidesPerView: 4 },
-                    868: { slidesPerView: 5 },
-                    1400: { slidesPerView: 6 },
-                  }}
-                  className="slider-thumbs-gallery-1"
-                >
-                  {thumbSlides.map((src, idx) => (
-                    <SwiperSlide key={`thumb-${idx}`}>
-                      <img src={src} alt="" />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+                    <Swiper
+                      modules={[FreeMode, Thumbs]}
+                      onSwiper={setThumbsSwiper}
+                      spaceBetween={10}
+                      slidesPerView={2}
+                      direction="vertical"
+                      freeMode
+                      watchSlidesProgress
+                      breakpoints={{
+                        450: { slidesPerView: 3 },
+                        768: { slidesPerView: 4 },
+                        868: { slidesPerView: 5 },
+                        1400: { slidesPerView: 6 },
+                      }}
+                      className="slider-thumbs-gallery-1"
+                    >
+                      {thumbSlides.map((src, idx) => (
+                        <SwiperSlide key={`thumb-${idx}`}>
+                          <img src={src} alt="" />
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  </>
+                ) : (
+                  <div
+                    className="flex w-full min-h-[280px] items-center justify-center bg-[#f0f0f0] md:min-h-[400px]"
+                    aria-hidden
+                  >
+                    <ImageOff className="h-16 w-16 text-[var(--Text)]/30" strokeWidth={1.25} />
+                  </div>
+                )}
               </div>
               </FadeIn>
             </div>
@@ -481,7 +500,7 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                             {videoEmbedSrc ? (
                               <iframe
                                 src={videoEmbedSrc}
-                                height={400}
+                                height={530}
                                 className="block w-full border-0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowFullScreen
@@ -530,9 +549,6 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                                   <Link href="/#" className="tags-item featured">
                                     {t("tagFeatured")}
                                   </Link>
-                                </div>
-                                <div className="button-heart pointer-events-none">
-                                  <Heart className="h-[15px] w-[15px] text-[var(--White)]" fill="currentColor" />
                                 </div>
                                 <div className="swiper-container slider-box-dream arrow-style-1 pagination-style-1 relative z-[1] [&_.swiper]:m-0 [&_.swiper]:h-full [&_.swiper]:max-w-full [&_.swiper]:w-full">
                                   <SliderBoxDream
@@ -600,8 +616,17 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                     <div className="sidebar-title">{t("contactTitle")}</div>
                     <div className="contact-info">
                       <div className="person">
-                        <div className="image-group relative overflow-hidden rounded-full">
-                          <img src={agentImg} alt="" />
+                        <div className="image-group relative h-[100px] w-[100px] shrink-0 overflow-hidden rounded-full">
+                          {agentDisplayUrl ? (
+                            <img src={agentDisplayUrl} alt="" className="h-full w-full object-cover" />
+                          ) : (
+                            <div
+                              className="flex h-full w-full items-center justify-center bg-[#e8e8e8] text-[var(--Text)]/40"
+                              aria-hidden
+                            >
+                              <User className="h-10 w-10" strokeWidth={1.5} />
+                            </div>
+                          )}
                         </div>
                         <div className="content">
                           <div className="name">

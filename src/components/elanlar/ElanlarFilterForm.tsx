@@ -106,11 +106,11 @@ export default function ElanlarFilterForm() {
   return (
     <div className="form-filter relative z-[5]">
       <form
-        className="form-search-home5 relative flex flex-wrap items-center gap-10 overflow-visible rounded-2xl border border-[var(--Border)] bg-[#F9F9F9] px-5 py-[19px] pl-[30px] max-lg:flex-col max-lg:items-stretch max-lg:gap-6"
+        className="form-search-home5 relative flex flex-wrap items-center gap-6 overflow-visible rounded-2xl border border-[var(--Border)] bg-[#F9F9F9] px-5 py-[19px] pl-[30px] max-lg:flex-col max-lg:items-stretch max-lg:gap-6 lg:flex-nowrap xl:gap-10"
         onSubmit={onSubmit}
       >
-        <div className="list flex min-w-0 flex-1 flex-wrap items-center gap-[30px] max-lg:w-full max-lg:flex-col max-lg:items-stretch">
-          <div className="group-form form-search-content w-full min-w-0 shrink-0 lg:w-[526px]">
+        <div className="list flex min-w-0 flex-1 flex-wrap items-center gap-5 max-lg:w-full max-lg:flex-col max-lg:items-stretch lg:flex-nowrap xl:gap-[30px]">
+          <div className="group-form form-search-content w-full min-w-0 lg:flex-1 lg:basis-[280px]">
             <div className="form-style-has-title relative">
               <div className="title mb-1 text-[13px] font-normal leading-[15px] text-[#969696]">
                 {t("filterSearchLabel")}
@@ -141,7 +141,7 @@ export default function ElanlarFilterForm() {
             className="divider-1 hidden h-10 w-px shrink-0 self-center bg-[var(--Border)] lg:block"
             aria-hidden
           />
-          <div className="group-form w-full shrink-0 lg:w-[212px]">
+          <div className="group-form w-full shrink-0 lg:w-[170px] xl:w-[200px]">
             <div className="form-style-has-title relative">
               <div className="title mb-1 text-[13px] font-normal leading-[15px] text-[#969696]">
                 {t("filterRegion")}
@@ -168,7 +168,7 @@ export default function ElanlarFilterForm() {
             className="divider-1 hidden h-10 w-px shrink-0 self-center bg-[var(--Border)] lg:block"
             aria-hidden
           />
-          <div className="group-form w-full shrink-0 lg:w-[212px]">
+          <div className="group-form w-full shrink-0 lg:w-[170px] xl:w-[200px]">
             <div className="form-style-has-title relative">
               <div className="title mb-1 text-[13px] font-normal leading-[15px] text-[#969696]">
                 {t("filterCategory")}
@@ -197,18 +197,18 @@ export default function ElanlarFilterForm() {
             <button
               ref={filterButtonRef}
               type="button"
-              className={`flex min-h-[52px] cursor-pointer items-center justify-center gap-2.5 rounded-xl border px-[26px] py-3 text-[15px] font-medium leading-[18px] transition-colors ${filterOpen ? "border-[var(--Primary)] text-[var(--Primary)]" : "border-[var(--Border)] text-[var(--Secondary)] hover:border-[var(--Secondary)]/40"}`}
+              className={`flex min-h-[52px] cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl border px-4 py-3 text-[15px] font-medium leading-[18px] transition-colors lg:px-5 xl:px-[26px] ${filterOpen ? "border-[var(--Primary)] text-[var(--Primary)]" : "border-[var(--Border)] text-[var(--Secondary)] hover:border-[var(--Secondary)]/40"}`}
               onClick={() => setFilterOpen((v) => !v)}
             >
               <SlidersHorizontal className="h-[18px] w-[18px] shrink-0" strokeWidth={1.75} />
               {t("filterButton")}
             </button>
           </div>
-          <div className="group-form min-w-0 flex-1">
+          <div className="group-form min-w-0 flex-1 lg:w-[140px] lg:flex-none">
             <div className="button-submit">
               <button
                 type="submit"
-                className="flex min-h-[52px] w-full items-center justify-center rounded-xl bg-[var(--Primary)] px-[30px] py-[19px] text-[15px] font-medium leading-[17px] text-[var(--White)] transition-colors hover:bg-[#6fb042]"
+                className="flex min-h-[52px] w-full items-center justify-center whitespace-nowrap rounded-xl bg-[var(--Primary)] px-5 py-[19px] text-[15px] font-medium leading-[17px] text-[var(--White)] transition-colors hover:bg-[#6fb042] lg:px-6 xl:px-[30px]"
               >
                 {t("filterSubmit")}
               </button>

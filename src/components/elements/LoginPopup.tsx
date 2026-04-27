@@ -14,8 +14,8 @@ import {
 import { getAxiosErrorMessage } from "@/services/client/auth/apiMessage";
 import OtpSixDigitBlock from "@/components/elements/OtpSixDigitBlock";
 
-const AUTH_SIDE_IMAGE =
-  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=80";
+const authSideImageCls =
+  "h-full min-h-[200px] w-full min-w-0 bg-gradient-to-br from-[var(--Primary)]/90 via-[var(--Secondary)] to-[#0a0a0a] md:min-h-full";
 
 const inputCls =
   "w-full rounded-xl border border-[var(--Border)] bg-[var(--White)] px-4 py-3 text-[15px] text-[var(--Secondary)] outline-none placeholder:text-[#999] focus:border-[var(--Primary)]";
@@ -203,21 +203,13 @@ export default function LoginPopup({
             <X className="h-5 w-5" />
           </button>
 
-          <div className="relative h-32 w-full shrink-0 md:hidden">
-            <img
-              src={AUTH_SIDE_IMAGE}
-              alt=""
-              className="h-full w-full object-cover"
-            />
+          <div className="relative h-32 w-full shrink-0 overflow-hidden md:hidden">
+            <div className={authSideImageCls} aria-hidden />
             <div className="absolute inset-0 bg-black/45" />
           </div>
 
-          <div className="relative hidden w-full shrink-0 md:flex md:w-[42%] md:flex-col">
-            <img
-              src={AUTH_SIDE_IMAGE}
-              alt=""
-              className="h-full min-h-[200px] w-full object-cover md:min-h-full"
-            />
+          <div className="relative hidden w-full shrink-0 overflow-hidden md:flex md:w-[42%] md:flex-col">
+            <div className={authSideImageCls} aria-hidden />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
             <div className="absolute bottom-8 left-8 right-8 text-[var(--White)]">
               <p className="text-lg font-medium leading-snug md:text-xl">

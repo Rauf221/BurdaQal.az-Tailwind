@@ -1,18 +1,14 @@
 import { publicStorageUrl } from "@/services/client/properties";
 import type { PublicAnnouncementItem } from "@/services/client/properties/api";
 
-const PLACEHOLDER_IMG =
-  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80";
-
-/** Elan kartı / oxşar elan üçün şəkil URL siyahısı */
+/** Elan kartı / oxşar elan üçün şəkil URL siyahısı (mediada şəkil yoxdursa boş) */
 export function announcementCardImages(media: PublicAnnouncementItem["media"]) {
   if (!media?.cover_image && !(media?.gallery?.length)) {
-    return [PLACEHOLDER_IMG];
+    return [];
   }
   const paths = [media.cover_image, ...(media.gallery ?? [])].filter(Boolean);
   const uniq = [...new Set(paths)] as string[];
-  const urls = uniq
+  return uniq
     .map((p) => publicStorageUrl(p))
     .filter((u): u is string => u != null && u !== "");
-  return urls.length ? urls : [PLACEHOLDER_IMG];
 }
