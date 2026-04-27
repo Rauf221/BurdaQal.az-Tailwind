@@ -1,0 +1,109 @@
+.hero {
+  width: 100%;
+  max-height: 340px;
+  min-height: 200px;
+  border-radius: 24px;
+}
+
+.breadcrumbSkel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.crumb {
+  height: 14px;
+  width: 48px;
+  border-radius: 4px;
+}
+
+.titleLineLg {
+  height: 28px;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.titleLineMd {
+  height: 28px;
+  width: 72%;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.subRow {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.subPill {
+  height: 14px;
+  width: 80px;
+  border-radius: 4px;
+}
+
+.bodyBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 13px;
+}
+
+.bodyLine {
+  height: 14px;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.bodyLine90 {
+  width: 92%;
+}
+
+.bodyLine80 {
+  width: 80%;
+}
+
+.bodyLine60 {
+  width: 62%;
+}
+
+.tagsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.tagPill {
+  height: 32px;
+  width: 72px;
+  border-radius: 8px;
+}
+
+.relatedHeading {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.headingLine {
+  height: 32px;
+  width: 220px;
+  max-width: 70%;
+  border-radius: 6px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.subheadingLine {
+  height: 16px;
+  width: 180px;
+  max-width: 55%;
+  border-radius: 4px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 12px;
+}

@@ -1,26 +1,570 @@
 @import "tailwindcss";
 
+/* justhome `abstracts/_variable.scss` — komponentlərdə `var(--Primary)` və s. */
 :root {
+  --White: #fff;
+  --Text: #3d3e3f;
+  --Primary: #8bd457;
+  --Secondary: #1a1a1a;
+  --Third: #54a01e;
+  --Fourth: #48573f;
+  --Border: #ebebeb;
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1a1a1a;
+  --jh-cream: #fff8f6;
+
+  /* Swiper: defolt mavi (#007aff) əvəzinə primary, daha kiçik oxlar */
+  --swiper-theme-color: var(--Primary);
+  --swiper-navigation-size: 28px;
+  --swiper-navigation-color: var(--Primary);
+  --swiper-pagination-color: var(--Primary);
+  --swiper-pagination-bullet-inactive-color: var(--Secondary);
+  --swiper-pagination-bullet-inactive-opacity: 0.22;
+}
+
+/* Ana hero slayderi: tünd fon üstündə oxlar ağ, aktiv nöqtə primary */
+.slider.home7 {
+  --swiper-navigation-color: var(--White);
+  --swiper-navigation-size: 30px;
+  --swiper-pagination-bullet-inactive-color: var(--White);
+  --swiper-pagination-bullet-inactive-opacity: 0.35;
+  --swiper-pagination-color: var(--Primary);
+}
+
+.slider.home7 .swiper-button-next,
+.slider.home7 .swiper-button-prev {
+  width: 30px;
+  height: 30px;
+}
+
+.slider.home7 .swiper-button-next::after,
+.slider.home7 .swiper-button-prev::after {
+  font-size: 12px;
+}
+
+/* Elan kartı şəkil slayderi — kompakt oxlar */
+.slider-box-dream .swiper-button-next,
+.slider-box-dream .swiper-button-prev {
+  width: 28px;
+  height: 28px;
+}
+
+.slider-box-dream .swiper-button-next::after,
+.slider-box-dream .swiper-button-prev::after {
+  font-size: 11px;
+  font-weight: 700;
 }
 
 @theme inline {
+  --color-jh-white: var(--White);
+  --color-jh-text: var(--Text);
+  --color-jh-primary: var(--Primary);
+  --color-jh-secondary: var(--Secondary);
+  --color-jh-third: var(--Third);
+  --color-jh-fourth: var(--Fourth);
+  --color-jh-border: var(--Border);
+  --color-jh-cream: var(--jh-cream);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
+}
+
+/**
+ * Scrollbar — justhome `style.css` (body gizli) + `nice-select.css` (.list track/thumb).
+ * Daxili overflow olan bütün bloklarda eyni incə boz scrollbar.
+ */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 30%);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #a7a7a7;
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #949494;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #a7a7a7 #f5f5f5;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+html,
+body {
+  scrollbar-width: none;
+}
+
+/**
+ * Mobil menyu — justhome `_mobilemenu.scss` / `style.css` (sol 300px panel, backdrop, `.close-btn` ekvivalenti).
+ */
+.mobile-menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 300px;
+  padding-right: 30px;
+  max-width: 100%;
+  height: 100%;
+  visibility: hidden;
+  z-index: 999999;
+}
+
+.mobile-menu .nav-logo {
+  position: relative;
+  flex-shrink: 0;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  padding: 12px 20px;
+}
+
+.mobile-menu .nav-logo__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mobile-menu .nav-logo img {
+  max-width: 200px;
+}
+
+.mobile-menu .bottom-canvas {
+  flex: 1;
+  min-height: 0;
+  padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+}
+
+body.mobile-menu-visible {
+  overflow: hidden;
+}
+
+.mobile-menu-visible .mobile-menu {
+  visibility: visible;
+}
+
+.mobile-menu-visible .mobile-menu .menu-backdrop {
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-visible .mobile-menu .menu-box {
+  left: 0;
+  -webkit-overflow-scrolling: touch;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+}
+
+.mobile-menu .menu-backdrop {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.45);
+  transition: all 0.3s ease 0s;
+  visibility: hidden;
+  opacity: 0;
+  appearance: none;
+}
+
+.mobile-menu .menu-box {
+  position: absolute;
+  left: -300px;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #fff;
+  z-index: 5;
+  border-radius: 0;
+  -webkit-overflow-scrolling: touch;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+}
+
+.mobile-menu .mobile-menu__close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--Secondary);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  appearance: none;
+}
+
+.mobile-menu .mobile-menu__close:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.mobile-menu .navigation {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mobile-menu .navigation li {
+  position: relative;
+  display: block;
+}
+
+.mobile-menu .navigation > li:not(:last-child) {
+  border-bottom: 1px solid var(--Border);
+}
+
+.mobile-menu .navigation li > a {
+  position: relative;
+  display: block;
+  font-weight: 600;
+  line-height: 26px;
+  padding: 10px 0;
+  font-size: 16px;
+  text-transform: capitalize;
+  color: var(--Secondary);
+  text-decoration: none;
+}
+
+.mobile-menu .navigation li:hover > a,
+.mobile-menu .navigation li.current > a,
+.mobile-menu .navigation li.current li.current > a {
+  color: #1f4b43;
+}
+
+.mobile-menu .locale-switcher--mobile {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--Border);
+}
+
+.mobile-menu .locale-switcher-mobile__label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--Text);
+  margin-bottom: 12px;
+}
+
+.mobile-menu .locale-switcher-mobile__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mobile-menu .locale-switcher-mobile__pill {
+  min-width: 48px;
+  padding: 10px 16px;
+  border: 1px solid var(--Border);
+  border-radius: 999px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--Secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu .locale-switcher-mobile__pill:hover {
+  border-color: var(--Primary);
+  color: var(--Primary);
+}
+
+.mobile-menu .locale-switcher-mobile__pill.is-active {
+  border-color: var(--Primary);
+  background-color: var(--Primary);
+  color: var(--White);
+}
+
+.mobile-menu .header-user-mobile {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--Border);
+}
+
+.mobile-menu .header-user-mobile .header-user-mobile__login {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--Primary);
+  background-color: var(--Primary);
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--White);
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.mobile-menu .header-user-mobile .header-user-mobile__login:hover {
+  filter: brightness(0.96);
+}
+
+.mobile-menu .header-user-mobile ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mobile-menu .header-user-mobile ul a,
+.mobile-menu .header-user-mobile ul button {
+  display: block;
+  padding: 8px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--Secondary);
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.mobile-menu .header-user-mobile ul a:hover,
+.mobile-menu .header-user-mobile ul button:hover {
+  text-decoration: underline;
+}
+
+.mobile-menu .header-user-mobile p {
+  margin: 0;
+}
+
+.mobile-menu .header-user-mobile .header-user-mobile__name {
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: var(--Secondary);
+}
+
+.mobile-menu .header-user-mobile .header-user-mobile__email {
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--Text);
+  opacity: 0.75;
+}
+
+/**
+ * Header12 (about / daxili səhifə) — justhome `Header12.js` + `_header.scss` / `_responsive.scss`.
+ */
+#header_main.header-fixed:not(.style-no-bg).is-fixed.is-small {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  border: none;
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition:
+    opacity 0.5s ease,
+    box-shadow 0.3s ease;
+}
+
+#header_main.header-fixed:not(.style-no-bg).is-fixed.is-small .header-inner {
+  padding-top: 10px !important;
+}
+
+#header_main.header-fixed:not(.style-no-bg).is-fixed.is-small .header-inner-wrap {
+  background-color: var(--White);
+}
+
+@media (max-width: 991px) {
+  #header_main.header-fixed:not(.style-no-bg).is-fixed.is-small {
+    background-color: var(--White);
+    padding-top: max(0px, env(safe-area-inset-top, 0px));
+    padding-bottom: 0;
+  }
+
+  #header_main.header-fixed:not(.style-no-bg).is-fixed.is-small .header-inner {
+    padding: 8px 15px !important;
+  }
+}
+
+/**
+ * HeaderHome (Header7, `.style-no-bg`) — scroll-da eyni fixed qabıq və padding;
+ * `.header-inner-wrap` fonu komponentdə qalır (masaüstü Secondary, mobil şəffaf).
+ */
+#header_main.header-fixed.style-no-bg.is-fixed.is-small {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  border: none;
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition:
+    opacity 0.5s ease,
+    box-shadow 0.3s ease;
+}
+
+#header_main.header-fixed.style-no-bg.is-fixed.is-small .header-inner {
+  padding-top: 10px !important;
+}
+
+@media (max-width: 991px) {
+  #header_main.header-fixed.style-no-bg.is-fixed.is-small {
+    background-color: var(--White);
+    padding-top: max(0px, env(safe-area-inset-top, 0px));
+    padding-bottom: 0;
+  }
+
+  #header_main.header-fixed.style-no-bg.is-fixed.is-small .header-inner {
+    padding: 8px 15px !important;
+  }
+}
+
+/**
+ * SliderHome7 — justhome `style.css` `.box-content-search` / `.form-style-has-title` (Slider7.js).
+ * Layihədə tam `style.css` yüklənmədiyi üçün axtarış nəticələri paneli burada təkrarlanır.
+ */
+.slider.home7 .form-style-has-title .box-content-search.style-1 {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: auto;
+  width: min(540px, calc(100vw - 32px));
+  padding: 28px 21px 20px;
+  border: 1px solid var(--Secondary);
+  border-radius: 32px;
+  background-color: var(--White);
+  box-shadow: 0px 6px 15px 0px rgba(64, 79, 104, 0.0509803922);
+  z-index: 30;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+.slider.home7 .form-style-has-title .box-content-search.style-1.slider-home7-search-dropdown--open {
+  top: calc(100% + 10px);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.slider.home7 .box-content-search.style-1 ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.slider.home7 .box-content-search .item1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 15px;
+  border-radius: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.3s ease;
+}
+
+.slider.home7 .box-content-search .item1:hover {
+  background-color: #f9f9f9;
+}
+
+.slider.home7 .box-content-search .item1 > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.slider.home7 .box-content-search .item1 .image {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.slider.home7 .box-content-search .item1 .image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slider.home7 .box-content-search .item1 p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--Secondary);
+}
+
+.slider.home7 .box-content-search .item1 .text {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: #6f6f6f;
+  flex-shrink: 0;
+}
+
+/* justhome `style.css` @media (max-width: 767px) .box-content-search */
+@media (max-width: 767px) {
+  .slider.home7 .form-style-has-title .box-content-search.style-1 {
+    max-width: -webkit-fill-available;
+    width: min(540px, calc(100vw - 32px));
+  }
+
+  .slider.home7 .slider-home7-open-filter.open-filter {
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
 }
