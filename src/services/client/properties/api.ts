@@ -33,12 +33,17 @@ export type PublicAnnouncementDetail = {
 	bedroom: number
 	bathroom: number
 	guest: number
+	/** Bəzi cavablarda `media` ilə paralel şəkil yolları */
+	cover_image?: string | null
+	cover_image_thumb?: string | null
 }
 
 export type PublicAnnouncementMedia = {
 	id: number
 	announcement_id: number
 	cover_image: string
+	/** Kart / siyahı üçün üz şəklinin yüngül variantı (`cover_image` tam ölçü) */
+	cover_image_thumb?: string | null
 	gallery: string[]
 	thumb_gallery: string[]
 	/** YouTube / video URL (bəzi cavablarda yalnız burada) */

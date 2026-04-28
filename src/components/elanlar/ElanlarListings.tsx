@@ -67,7 +67,6 @@ const PropertyCard = memo(function PropertyCard({
         emptyLabel={tc("dash")}
         images={images}
         mediaReady={isVisible}
-        badge={t("tagListing")}
         className="w-full max-w-full"
       />
     </div>

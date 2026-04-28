@@ -416,7 +416,9 @@
     "callCta": "Call",
     "whatsappCta": "WhatsApp",
     "videoIframeTitle": "Property video",
-    "mapIframeTitle": "Property map"
+    "mapIframeTitle": "Property map",
+    "galleryPrev": "Previous image",
+    "galleryNext": "Next image"
   },
   "dashboardPropertyForm": {
     "breadcrumbTitle": "Add listing",

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
 import {
   Bath,
   BedDouble,
@@ -15,17 +15,17 @@ import {
   Phone,
   User,
 } from "lucide-react";
-import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import { FreeMode, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/free-mode";
 
 import { useTranslations } from "next-intl";
 import Layout from "@/components/layout/Layout";
 import ElanlarCard from "@/components/elements/ElanlarCard";
+import { ElanlarCardNavArrows } from "@/components/elements/elanlar-card/ElanlarCardNavArrows";
 import { announcementCardImages } from "@/components/elanlar/announcementCardImages";
 import { Link } from "@/i18n/navigation";
 import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
@@ -133,6 +133,7 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
   const t = useTranslations("propertySingle");
   const tc = useTranslations("common");
   const tl = useTranslations("listings");
+  const mainSwiperRef = useRef<SwiperType | null>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -157,26 +158,40 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
   );
 
   const { mainSlides, thumbSlides } = useMemo(() => {
-    const raw =
-      media?.gallery && media.gallery.length > 0
-        ? media.gallery
-        : media?.cover_image
-          ? [media.cover_image]
-          : ([] as string[]);
-    const main = raw
-      .map((p) => publicStorageUrl(p))
+    const coverPath = media?.cover_image?.trim();
+    const galleryPaths = media?.gallery ?? [];
+
+    type Slot = { full: string; thumb?: string | null };
+    const slots: Slot[] = [];
+
+    if (coverPath) {
+      slots.push({ full: coverPath, thumb: media?.cover_image_thumb ?? null });
+    }
+
+    let gi = 0;
+    for (const g of galleryPaths) {
+      if (!g?.trim()) continue;
+      const p = g.trim();
+      if (coverPath && p === coverPath) continue;
+      slots.push({ full: p, thumb: media?.thumb_gallery?.[gi] ?? null });
+      gi += 1;
+    }
+
+    const main = slots
+      .map((s) => publicStorageUrl(s.full))
       .filter((u): u is string => u != null && u !== "");
+
     if (main.length === 0) {
       return { mainSlides: [] as string[], thumbSlides: [] as string[] };
     }
-    if (media?.thumb_gallery && media.thumb_gallery.length >= raw.length) {
-      const thumbs = raw.map((_, i) => {
-        const t = publicStorageUrl(media.thumb_gallery![i]);
-        return t && t !== "" ? t : main[i]!;
-      });
-      return { mainSlides: main, thumbSlides: thumbs };
-    }
-    return { mainSlides: main, thumbSlides: main };
+
+    const thumbs = slots.map((s, i) => {
+      const thumbResolved =
+        s.thumb != null && String(s.thumb).trim() !== "" ? publicStorageUrl(String(s.thumb).trim()) : null;
+      return thumbResolved && thumbResolved !== "" ? thumbResolved : main[i]!;
+    });
+
+    return { mainSlides: main, thumbSlides: thumbs };
   }, [media]);
 
   const agentDisplayUrl = useMemo(() => {
@@ -246,35 +261,43 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
 
             <div className="w-full px-[14px]">
               <FadeIn delay={0.08}>
-              <div className="thumbs-slider-column v5-thumbs arrow-style-1">
+              <div className="thumbs-slider-column v5-thumbs">
                 {mainSlides.length > 0 ? (
                   <>
-                    <Swiper
-                      modules={[FreeMode, Navigation, Thumbs]}
-                      spaceBetween={0}
-                      navigation={{
-                        nextEl: ".thumbs-next",
-                        prevEl: ".thumbs-prev",
-                      }}
-                      thumbs={{
-                        swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
-                      }}
-                      className="slider-thumbs-gallery-2"
-                    >
-                      {mainSlides.map((src, idx) => (
-                        <SwiperSlide key={`main-${idx}`}>
-                          <div className="relative h-full min-h-[280px] md:min-h-[400px]">
-                            <div className="list-tags type-1">
-                              <span className="tags-item for-sell">{t("tagListing")}</span>
-                              <span className="tags-item featured">{t("tagFeatured")}</span>
+                    <div className="slider-thumbs-gallery-2 relative group min-h-[280px] flex-1 min-w-0 overflow-hidden rounded-2xl md:min-h-[400px]">
+                      <Swiper
+                        modules={[FreeMode, Thumbs]}
+                        spaceBetween={0}
+                        thumbs={{
+                          swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
+                        }}
+                        className="m-0! h-full max-h-[650px] min-h-[280px] w-full shrink-0 md:min-h-[400px]"
+                        onSwiper={(s) => {
+                          mainSwiperRef.current = s;
+                        }}
+                      >
+                        {mainSlides.map((src, idx) => (
+                          <SwiperSlide key={`main-${idx}`}>
+                            <div className="relative h-full min-h-[280px] md:min-h-[400px]">
+                              <div className="list-tags type-1">
+                                <span className="tags-item for-sell">{t("tagListing")}</span>
+                                <span className="tags-item featured">{t("tagFeatured")}</span>
+                              </div>
+                              <img src={src} alt="" className="h-full w-full object-cover" />
                             </div>
-                            <img src={src} alt="" className="h-full w-full object-cover" />
-                          </div>
-                        </SwiperSlide>
-                      ))}
-                      <div className="swiper-button-next has-background thumbs-next" />
-                      <div className="swiper-button-prev has-background thumbs-prev" />
-                    </Swiper>
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                      {mainSlides.length > 1 ? (
+                        <ElanlarCardNavArrows
+                          large
+                          prevLabel={t("galleryPrev")}
+                          nextLabel={t("galleryNext")}
+                          onPrev={() => mainSwiperRef.current?.slidePrev()}
+                          onNext={() => mainSwiperRef.current?.slideNext()}
+                        />
+                      ) : null}
+                    </div>
 
                     <Swiper
                       modules={[FreeMode, Thumbs]}
@@ -531,42 +554,10 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                       </div>
                     </div>
                   </div>
-
-                  <div className="smilar-homes mt-16">
-                    <h4 className="mb-2">{t("similarHomes")}</h4>
-                    <FadeInStagger className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                      {similarHomes.map((row) => {
-                        const d = row.detail;
-                        const imgs = announcementCardImages(row.media);
-                        const href = `/elanlar/${row.slug}`;
-                        return (
-                          <FadeInStaggerItem key={row.id} className="min-w-0 flex justify-center">
-                            <ElanlarCard
-                              href={href}
-                              title={row.title ?? ""}
-                              imageAlt={row.title ?? ""}
-                              priceLine={
-                                row.price ? tl("priceAzn", { price: row.price }) : tc("dash")
-                              }
-                              address={row.address?.street || tc("dash")}
-                              beds={d?.bedroom ?? null}
-                              baths={d?.bathroom ?? null}
-                              rooms={d?.room ?? null}
-                              emptyLabel={tc("dash")}
-                              images={imgs}
-                              mediaReady
-                              badge={tl("tagListing")}
-                              className="w-full max-w-full"
-                            />
-                          </FadeInStaggerItem>
-                        );
-                      })}
-                    </FadeInStagger>
-                  </div>
                 </div>
               </FadeIn>
 
-              <FadeIn className="xl:col-span-4" delay={0.06}>
+              <FadeIn className="xl:col-span-4 max-h-[500px] overflow-y-auto" delay={0.06}>
                 <div className="property-single-sidebar">
                   <div className="sidebar-item sidebar-contact-info">
                     <div className="sidebar-title">{t("contactTitle")}</div>
@@ -609,6 +600,41 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                 </div>
               </FadeIn>
             </div>
+            <div className="">
+              <FadeIn className="xl:col-span-8">
+            <div className="smilar-homes mt-16 w-full flex flex-col gap-6 justify-center items-center">
+                    <h4 className="mb-6 text-center text-5xl font-bold">{t("similarHomes")}</h4>
+                    <FadeInStagger className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                      {similarHomes.map((row) => {
+                        const d = row.detail;
+                        const imgs = announcementCardImages(row.media);
+                        const href = `/elanlar/${row.slug}`;
+                        return (
+                          <FadeInStaggerItem key={row.id} className="min-w-0 flex justify-center">
+                            <ElanlarCard
+                              href={href}
+                              title={row.title ?? ""}
+                              imageAlt={row.title ?? ""}
+                              priceLine={
+                                row.price ? tl("priceAzn", { price: row.price }) : tc("dash")
+                              }
+                              address={row.address?.street || tc("dash")}
+                              beds={d?.bedroom ?? null}
+                              baths={d?.bathroom ?? null}
+                              rooms={d?.room ?? null}
+                              emptyLabel={tc("dash")}
+                              images={imgs}
+                              mediaReady
+                              className="w-full max-w-full"
+                            />
+                          </FadeInStaggerItem>
+                        );
+                      })}
+                    </FadeInStagger>
+                  </div>
+                  </FadeIn>
+                
+                </div>
           </div>
         </div>
       </Layout>

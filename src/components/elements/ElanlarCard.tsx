@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import { Pagination } from "swiper/modules";
 import { ImageOff } from "lucide-react";
@@ -15,6 +15,7 @@ import { ElanlarCardNavArrows } from "@/components/elements/elanlar-card/Elanlar
 /**
  * Figma: **2116:7177** (default) + **2116:7155** (hover — nav).
  * Alt komponentlər: `elanlar-card/ElanlarCardContent`, `ElanlarCardImageOverlays`, `ElanlarCardNavArrows`.
+ * Kart üzərində ən çox 3 şəkil; bütün fotoşəkillər elan tək səhifəsində (slug).
  */
 export type ElanlarCardProps = {
   href: string;
@@ -30,10 +31,11 @@ export type ElanlarCardProps = {
   baths: number | null;
   rooms: number | null;
   emptyLabel?: string;
-  badge?: string;
   mediaReady?: boolean;
   onSwiperReady?: (swiper: SwiperType) => void;
 };
+
+const CARD_IMAGE_LIMIT = 3;
 
 const CARD_FRAME = "w-full max-w-[342px] overflow-hidden rounded-2xl ";
 
@@ -51,16 +53,55 @@ export default function ElanlarCard({
   baths,
   rooms,
   emptyLabel = "—",
-  badge,
   mediaReady = true,
   onSwiperReady,
 }: ElanlarCardProps) {
   const uid = useId().replace(/:/g, "");
   const paginationClass = `elanlar-card-pag-${uid}`;
   const swiperRef = useRef<SwiperType | null>(null);
-  const images = mediaReady ? imagesIn : imagesIn.length > 0 ? [imagesIn[0]!] : [];
+  const coverRef = useRef<HTMLImageElement | null>(null);
+  const fromMedia = mediaReady ? imagesIn : imagesIn.length > 0 ? [imagesIn[0]!] : [];
+  const images = fromMedia.slice(0, CARD_IMAGE_LIMIT);
   const hasImage = images.length > 0;
   const multi = images.length > 1;
+
+  const [isCoverLoaded, setIsCoverLoaded] = useState(false);
+  const [enableSwiper, setEnableSwiper] = useState(false);
+
+  useEffect(() => {
+    setIsCoverLoaded(false);
+    setEnableSwiper(false);
+  }, [images[0]]);
+
+  useEffect(() => {
+    if (!coverRef.current) return;
+    if (coverRef.current.complete && coverRef.current.naturalWidth > 0) {
+      setIsCoverLoaded(true);
+    }
+  }, [images[0]]);
+
+  useEffect(() => {
+    if (!isCoverLoaded || !multi || !mediaReady || enableSwiper) return;
+    if (typeof window === "undefined") return;
+    const win = window as unknown as {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    let idleId: number | undefined;
+    let timerId: ReturnType<typeof setTimeout> | undefined;
+    const enable = () => setEnableSwiper(true);
+    if (typeof win.requestIdleCallback === "function") {
+      idleId = win.requestIdleCallback(enable, { timeout: 800 });
+    } else {
+      timerId = setTimeout(enable, 80);
+    }
+    return () => {
+      if (idleId !== undefined && typeof win.cancelIdleCallback === "function") {
+        win.cancelIdleCallback(idleId);
+      }
+      if (timerId !== undefined) clearTimeout(timerId);
+    };
+  }, [isCoverLoaded, multi, mediaReady, enableSwiper]);
 
   const priceContent =
     priceLine != null && String(priceLine).length > 0
@@ -80,15 +121,40 @@ export default function ElanlarCard({
       data-figma-hover="2116:7155"
     >
       <div className="relative h-[312px] w-full box-border">
-        {badge ? (
-          <div className="absolute left-5 top-5 z-10 flex gap-2.5">
-            <span className="rounded-[120px] bg-jh-fourth px-[15px] py-2 text-[13px] font-medium leading-[15px] text-jh-white">
-              {badge}
-            </span>
-          </div>
-        ) : null}
         <div className="relative h-full w-full overflow-hidden rounded-xl bg-[#e8e8ed]">
-          {hasImage && multi ? (
+          {!hasImage ? (
+            <Link
+              href={href}
+              className="flex h-full w-full items-center justify-center text-jh-text/35"
+              aria-hidden
+            >
+              <ImageOff className="h-10 w-10" strokeWidth={1.25} />
+            </Link>
+          ) : !enableSwiper ? (
+            <>
+              <Link href={href} className="block h-full w-full" aria-label={title || imageAlt}>
+                <img
+                  ref={coverRef}
+                  src={images[0]}
+                  alt={imageAlt || title || ""}
+                  className={`h-full w-full object-cover transition-opacity duration-300 ${
+                    isCoverLoaded ? "opacity-100" : "opacity-0"
+                  }`}
+                  loading="lazy"
+                  decoding="async"
+                  onLoad={() => setIsCoverLoaded(true)}
+                  onError={() => setIsCoverLoaded(true)}
+                />
+              </Link>
+              {!isCoverLoaded ? (
+                <div
+                  className="pointer-events-none absolute inset-0 animate-pulse bg-[#e8e8ed]"
+                  aria-hidden
+                />
+              ) : null}
+              <ElanlarCardImageOverlays />
+            </>
+          ) : (
             <>
               <Swiper
                 modules={[Pagination]}
@@ -127,27 +193,6 @@ export default function ElanlarCard({
                 onNext={() => swiperRef.current?.slideNext()}
               />
             </>
-          ) : hasImage && !multi ? (
-            <>
-              <Link href={href} className="block h-full w-full" aria-label={title || imageAlt}>
-                <img
-                  src={images[0]}
-                  alt={imageAlt || title || ""}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </Link>
-              <ElanlarCardImageOverlays />
-            </>
-          ) : (
-            <Link
-              href={href}
-              className="flex h-full w-full items-center justify-center text-jh-text/35"
-              aria-hidden
-            >
-              <ImageOff className="h-10 w-10" strokeWidth={1.25} />
-            </Link>
           )}
         </div>
       </div>

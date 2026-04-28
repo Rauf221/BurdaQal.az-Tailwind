@@ -416,7 +416,9 @@
     "callCta": "Zəng et",
     "whatsappCta": "WhatsApp",
     "videoIframeTitle": "Elan videosu",
-    "mapIframeTitle": "Elan xəritəsi"
+    "mapIframeTitle": "Elan xəritəsi",
+    "galleryPrev": "Əvvəlki şəkil",
+    "galleryNext": "Növbəti şəkil"
   },
   "dashboardPropertyForm": {
     "breadcrumbTitle": "Elan əlavə et",

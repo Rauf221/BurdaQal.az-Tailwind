@@ -416,7 +416,9 @@
     "callCta": "Позвонить",
     "whatsappCta": "WhatsApp",
     "videoIframeTitle": "Видео объекта",
-    "mapIframeTitle": "Карта объекта"
+    "mapIframeTitle": "Карта объекта",
+    "galleryPrev": "Предыдущее фото",
+    "galleryNext": "Следующее фото"
   },
   "dashboardPropertyForm": {
     "breadcrumbTitle": "Добавить объявление",

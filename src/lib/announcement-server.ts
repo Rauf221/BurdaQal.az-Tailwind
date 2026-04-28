@@ -62,6 +62,7 @@ export function buildAnnouncementForClient(
   const media = data.media;
   const galleryRaw = media?.gallery?.length ? media.gallery : [];
   const cover = media?.cover_image ? resolve(media.cover_image) : "";
+  const coverThumb = media?.cover_image_thumb ? resolve(media.cover_image_thumb) : "";
   const gallery = galleryRaw.map(resolve).filter(Boolean);
   const slides = gallery.length ? gallery : cover ? [cover] : [];
   const thumbsRaw = media?.thumb_gallery?.length ? media.thumb_gallery : [];
@@ -77,6 +78,7 @@ export function buildAnnouncementForClient(
         ? {
           ...media,
           cover_image: cover,
+          cover_image_thumb: coverThumb || undefined,
           gallery: slides,
           thumb_gallery: thumbGallery,
         }

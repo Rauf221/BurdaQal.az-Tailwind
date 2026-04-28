@@ -48,7 +48,7 @@ function TitleLines({ text }: { text: string | undefined }) {
     .filter(Boolean);
   if (lines.length === 0) return null;
   return (
-    <h1 className="mx-auto mb-8 max-w-[587px] text-[32px] font-medium leading-10 text-[var(--White)] md:text-[60px] md:leading-[70px]">
+    <h1 className="mx-auto mb-6 max-w-[887px] text-[22px] font-medium leading-[28px] text-[var(--White)] sm:text-[28px] sm:leading-[34px] md:mb-8 md:text-[60px] md:leading-[70px]">
       {lines.map((line, i) => (
         <span key={i}>
           {i > 0 ? <br /> : null}
@@ -200,17 +200,17 @@ export default function SliderHome7() {
             const img = item.image || item.thumb_image;
             return (
               <SwiperSlide key={`home7-slide-${idx}`}>
-                <div className="wrap-slider relative bg-[var(--jh-cream)]">
-                  <div className="image absolute inset-0">
+                <div className="wrap-slider relative bg-[var(--jh-cream)] md:min-h-[750px] min-h-[500px] overflow-hidden">
+                  <div className="image absolute inset-0 ">
                     {img ? (
                       <img
                         src={img}
                         alt={item.title?.replace(/\n/g, " ") || ""}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover max-h-[800px] min "
                       />
                     ) : (
                       <div
-                        className="h-full w-full bg-gradient-to-br from-[#2a3a28] via-[#1a1a18] to-[#0a0a0a]"
+                        className="h-full w-full bg-gradient-to-br from-[#40ef29] via-[#1a1a18] to-[#0a0a0a]"
                         aria-hidden
                       />
                     )}
@@ -223,9 +223,9 @@ export default function SliderHome7() {
                     <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
                       <div className="row -mx-[14px]">
                         <div className="col-12 px-[14px]">
-                          <div className="slider-content px-0 py-[156px] text-center md:pb-[228px] md:pt-[284px]">
+                          <div className="slider-content px-0 py-[110px] text-center mt-30 md:mt-0 sm:py-[140px] md:pb-[228px] md:pt-[284px] max-w-[700px] mx-auto">
                             <TitleLines text={item.title} />
-                            <div className="mb-[33px] text-[17px] font-normal leading-5 text-[var(--White)]">
+                            <div className="mb-[20px] text-[14px] font-normal leading-[20px] text-[var(--White)] sm:text-[15px] sm:leading-[22px] md:mb-[33px] md:text-[17px] md:leading-5">
                               {item.description}
                             </div>
                           </div>
@@ -280,7 +280,9 @@ export default function SliderHome7() {
                   ) : previewItems.length > 0 ? (
                     <ul>
                       {previewItems.map((row) => {
-                        const cover = publicStorageUrl(row.media?.cover_image);
+                        const cover =
+                          publicStorageUrl(row.media?.cover_image_thumb) ??
+                          publicStorageUrl(row.media?.cover_image);
                         return (
                         <li key={row.id}>
                           <Link href={`/elanlar/${row.slug}`} className="item1">
