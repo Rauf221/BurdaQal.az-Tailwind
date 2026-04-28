@@ -144,8 +144,6 @@ export default function WorkWithUsHome() {
         </div>
 
         <div className="row -mx-[14px] mt-10">
-          <div className="col-12 px-[14px] text-center">
-        <div className="row -mx-[14px]">
           <div className="col-12 px-[14px] text-center pt-4 md:pt-10">
             <Link
               href="/elanlar"
@@ -158,5 +156,6 @@ export default function WorkWithUsHome() {
         </div>
       </div>
     </section>
+  
   );
 }
