@@ -59,6 +59,11 @@ function BlogListContent() {
   const pageNumClass =
     "flex h-10 min-w-[40px] items-center justify-center rounded-full px-2 text-[15px] font-normal leading-7 text-[var(--Secondary)] transition-colors hover:bg-[#F9F9F9]";
 
+  const tabActiveClass =
+    "active border-transparent bg-black text-white";
+  const tabIdleClass =
+    "border-transparent bg-transparent text-[var(--Text)]";
+
   return (
     <>
       <FadeIn>
@@ -85,16 +90,19 @@ function BlogListContent() {
       <div className="blog-list-api-wrap px-5">
         <FadeIn>
           <div className="widget-tabs style-1">
-          <div className="themesflat-container mx-auto mb-[30px] w-full max-w-[1428px] px-[14px]">
+          <div className="themesflat-container mx-auto mb-5 w-full max-w-[1428px] px-[14px]">
             {tagsPending ? (
               <BlogFilterSkeletonRow />
             ) : (
-              <ul className="widget-menu-tab flex flex-wrap justify-center gap-x-4 gap-y-3">
+              <ul className="widget-menu-tab flex flex-wrap justify-center gap-x-2 gap-y-2">
                 <li
-                  className={`item-title rounded-[41px] border border-transparent px-[7px] py-[5px] transition-colors ${!activeTag ? "active border-[var(--Secondary)] bg-[var(--jh-cream)]" : ""}`}
+                  className={`item-title rounded-full border px-0.5 py-0.5 transition-colors ${!activeTag ? tabActiveClass : tabIdleClass}`}
                 >
-                  <Link href={BLOG_LIST} className="blog-filter-tab-link block py-2.5 px-5">
-                    <span className="inner text-base font-medium leading-[19px] text-[var(--Text)]">
+                  <Link
+                    href={BLOG_LIST}
+                    className="blog-filter-tab-link block px-3 py-1.5 text-inherit sm:px-3.5"
+                  >
+                    <span className="inner text-[13px] font-medium leading-5 text-inherit sm:text-sm">
                       {tc("all")}
                     </span>
                   </Link>
@@ -102,13 +110,13 @@ function BlogListContent() {
                 {tags.map((tag) => (
                   <li
                     key={tag.slug}
-                    className={`item-title rounded-[41px] border border-transparent px-[7px] py-[5px] transition-colors ${activeTag === tag.slug ? "active border-[var(--Secondary)] bg-[var(--jh-cream)]" : ""}`}
+                    className={`item-title rounded-full border px-0.5 py-0.5 transition-colors ${activeTag === tag.slug ? tabActiveClass : tabIdleClass}`}
                   >
                     <Link
                       href={`${BLOG_LIST}?tag=${encodeURIComponent(tag.slug)}`}
-                      className="blog-filter-tab-link block py-2.5 px-5"
+                      className="blog-filter-tab-link block px-3 py-1.5 text-inherit sm:px-3.5"
                     >
-                      <span className="inner text-base font-medium leading-[19px] text-[var(--Text)]">
+                      <span className="inner text-[13px] font-medium leading-5 text-inherit sm:text-sm">
                         {tag.name}
                       </span>
                     </Link>

@@ -29,8 +29,9 @@ export default function WorkWithUsHome() {
   const items = (q.data?.data ?? []).slice(0, WORK_WITH_US_HOME_MAX_CARDS);
 
   const tabActiveClass =
-    "active border-[var(--Secondary)] bg-[var(--jh-cream)]";
-  const tabIdleClass = "border-transparent";
+    "active border-transparent bg-black text-white";
+  const tabIdleClass =
+    "border-transparent bg-transparent text-[var(--Text)]";
 
   return (
     <section className="tf-section work-with-us style-3 pb-[200px] pt-[163px] md:pt-[202px]">
@@ -58,7 +59,7 @@ export default function WorkWithUsHome() {
                     className={`item-title cursor-pointer rounded-[41px] border px-2 py-1.5 transition-colors ${selectedCategoryId === null ? tabActiveClass : tabIdleClass}`}
                     onClick={() => setSelectedCategoryId(null)}
                   >
-                    <span className="inner text-base font-medium leading-[19px] text-[var(--Text)]">
+                    <span className="inner text-base font-medium leading-[19px] text-inherit">
                       {t("all")}
                     </span>
                   </button>
@@ -82,7 +83,7 @@ export default function WorkWithUsHome() {
                           className={`item-title cursor-pointer rounded-[41px] border px-2 py-1.5 transition-colors ${active ? tabActiveClass : tabIdleClass}`}
                           onClick={() => setSelectedCategoryId(idStr)}
                         >
-                          <span className="inner text-base font-medium leading-[19px] text-[var(--Text)]">
+                          <span className="inner text-base font-medium leading-[19px] text-inherit">
                             {cat.name}
                           </span>
                         </button>

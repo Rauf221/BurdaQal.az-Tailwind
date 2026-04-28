@@ -1,11 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { ArrowRight, Check, Mail, MapPin, Phone } from "lucide-react";
 import {
-  getContactMapEmbedSrc,
   getContactMapExternalUrl,
   getContactQuery,
   useContactFormMutation,
@@ -17,7 +17,6 @@ export default function ContactView() {
   const t = useTranslations("contact");
   const { data, isPending } = useQuery(getContactQuery(locale));
   const contact = data?.data;
-  const mapSrc = getContactMapEmbedSrc(contact);
   const mapLink = getContactMapExternalUrl(contact);
 
   const [formMsg, setFormMsg] = useState<{
@@ -58,23 +57,16 @@ export default function ContactView() {
     <div>
       <FadeIn>
         <div className="wrap-map-v5 relative pb-0 max-md:pb-0 min-[992px]:pb-[193px]">
-        {isPending ? (
-          <div
-            className="row-height min-h-[570px] w-full rounded-2xl bg-[#ececec]"
-            aria-hidden
+        <div className="row-height relative h-[570px] min-h-[570px] w-full overflow-hidden rounded-2xl">
+          <Image
+            src="/images/Contact/ContactBanner.jpg"
+            alt={t("bannerAlt")}
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+            priority
           />
-        ) : (
-          <iframe
-            id="map-1"
-            className="row-height min-h-[570px] w-full rounded-2xl border-0"
-            title={t("mapTitle")}
-            src={mapSrc}
-            height={570}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        )}
+        </div>
         <FadeInStagger className="grid-contact relative mx-auto flex w-full max-w-[1190px] flex-wrap gap-10 px-4 pt-5 min-[992px]:absolute min-[992px]:bottom-0 min-[992px]:left-1/2 min-[992px]:-translate-x-1/2 min-[992px]:flex-nowrap min-[992px]:px-4 min-[992px]:pt-0">
           <FadeInStaggerItem className="contact-item min-h-[385px] w-full min-w-0 flex-1 rounded-3xl bg-[var(--White)] px-[30px] py-[30px] text-center text-[var(--Secondary)] shadow-[0px_6px_15px_0px_#404F680D] min-[551px]:px-[50px] min-[551px]:py-[60px]">
             <div className="icon mx-auto mb-[22px] flex h-20 w-20 items-center justify-center rounded-full bg-[#F9F9F9]">

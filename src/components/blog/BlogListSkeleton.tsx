@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import styles from "./BlogListSkeleton.module.css";
 
-const FILTER_PILL_WIDTHS = [72, 96, 84, 110, 78];
+const FILTER_PILL_WIDTHS = [56, 72, 64, 88, 62];
 
 export function BlogFilterSkeletonRow() {
   return (
