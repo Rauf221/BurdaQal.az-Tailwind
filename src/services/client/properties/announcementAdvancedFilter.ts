@@ -1,8 +1,9 @@
 import type { PublicAnnouncementItem } from "@/services/client/properties/api";
 
 export type AdvancedListingParams = {
-  min_bedrooms: string;
-  min_bathrooms: string;
+  room: string;
+  bedroom: string;
+  bathroom: string;
   min_area: string;
   max_area: string;
   min_price: string;
@@ -16,9 +17,14 @@ export type AdvancedListingParams = {
 export function parseAdvancedListingParams(
   searchParams: URLSearchParams,
 ): AdvancedListingParams {
+  const legacyBed = String(searchParams.get("min_bedrooms") ?? "").trim();
+  const legacyBath = String(searchParams.get("min_bathrooms") ?? "").trim();
   return {
-    min_bedrooms: String(searchParams.get("min_bedrooms") ?? "").trim(),
-    min_bathrooms: String(searchParams.get("min_bathrooms") ?? "").trim(),
+    room: String(searchParams.get("room") ?? "").trim(),
+    bedroom:
+      String(searchParams.get("bedroom") ?? "").trim() || legacyBed,
+    bathroom:
+      String(searchParams.get("bathroom") ?? "").trim() || legacyBath,
     min_area: String(searchParams.get("min_area") ?? "").trim(),
     max_area: String(searchParams.get("max_area") ?? "").trim(),
     min_price: String(searchParams.get("min_price") ?? "").trim(),
@@ -47,13 +53,18 @@ export function announcementMatchesAdvanced(
   row: PublicAnnouncementItem,
   a: AdvancedListingParams,
 ): boolean {
-  const minB = Number(a.min_bedrooms);
-  if (a.min_bedrooms !== "" && Number.isFinite(minB)) {
+  const minR = Number(a.room);
+  if (a.room !== "" && Number.isFinite(minR)) {
+    const v = row.detail?.room ?? 0;
+    if (v < minR) return false;
+  }
+  const minB = Number(a.bedroom);
+  if (a.bedroom !== "" && Number.isFinite(minB)) {
     const v = row.detail?.bedroom ?? 0;
     if (v < minB) return false;
   }
-  const minBt = Number(a.min_bathrooms);
-  if (a.min_bathrooms !== "" && Number.isFinite(minBt)) {
+  const minBt = Number(a.bathroom);
+  if (a.bathroom !== "" && Number.isFinite(minBt)) {
     const v = row.detail?.bathroom ?? 0;
     if (v < minBt) return false;
   }

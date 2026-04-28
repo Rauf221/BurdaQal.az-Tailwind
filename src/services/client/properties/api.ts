@@ -93,9 +93,13 @@ export type GetAnnouncementsOptions = {
 	search?: string
 	category_id?: string | number
 	region_id?: string | number
+	/** GET /announcements — Postman: room, bedroom, bathroom */
+	room?: string | number
+	bedroom?: string | number
+	bathroom?: string | number
+	/** `new` | `old` */
+	sort?: string
 	/** Əlavə filtrlər — backend dəstəkləyirsə tətbiq olunur */
-	min_bedrooms?: string | number
-	min_bathrooms?: string | number
 	min_area?: string | number
 	max_area?: string | number
 	min_price?: string | number
@@ -133,8 +137,10 @@ export async function getAnnouncements(
 		search,
 		category_id,
 		region_id,
-		min_bedrooms,
-		min_bathrooms,
+		room,
+		bedroom,
+		bathroom,
+		sort,
 		min_area,
 		max_area,
 		min_price,
@@ -152,8 +158,10 @@ export async function getAnnouncements(
 	if (region_id != null && String(region_id).trim() !== '') {
 		params.region_id = String(region_id).trim()
 	}
-	addIfNonEmpty(params, 'min_bedrooms', min_bedrooms)
-	addIfNonEmpty(params, 'min_bathrooms', min_bathrooms)
+	addIfNonEmpty(params, 'room', room)
+	addIfNonEmpty(params, 'bedroom', bedroom)
+	addIfNonEmpty(params, 'bathroom', bathroom)
+	addIfNonEmpty(params, 'sort', sort)
 	addIfNonEmpty(params, 'min_area', min_area)
 	addIfNonEmpty(params, 'max_area', max_area)
 	addIfNonEmpty(params, 'min_price', min_price)

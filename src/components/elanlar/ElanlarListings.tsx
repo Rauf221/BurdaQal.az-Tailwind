@@ -4,6 +4,7 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ElanlarCard from "@/components/elements/ElanlarCard";
 import { announcementCardImages } from "@/components/elanlar/announcementCardImages";
@@ -77,6 +78,7 @@ export default function ElanlarListings() {
   const locale = useLocale();
   const t = useTranslations("listings");
   const tc = useTranslations("common");
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [page, setPage] = useState(1);
   const searchKey = searchParams.toString();
@@ -87,13 +89,17 @@ export default function ElanlarListings() {
     () => parseAdvancedListingParams(new URLSearchParams(searchKey)),
     [searchKey],
   );
+  const sortApi =
+    String(searchParams.get("sort") ?? "").trim() === "old" ? "old" : "new";
   const q = useQuery(
     announcementsListQuery(locale, page, {
       search,
       category_id,
       region_id,
-      ...(advanced.min_bedrooms && { min_bedrooms: advanced.min_bedrooms }),
-      ...(advanced.min_bathrooms && { min_bathrooms: advanced.min_bathrooms }),
+      sort: sortApi,
+      ...(advanced.room && { room: advanced.room }),
+      ...(advanced.bedroom && { bedroom: advanced.bedroom }),
+      ...(advanced.bathroom && { bathroom: advanced.bathroom }),
       ...(advanced.min_area && { min_area: advanced.min_area }),
       ...(advanced.max_area && { max_area: advanced.max_area }),
       ...(advanced.min_price && { min_price: advanced.min_price }),
@@ -131,12 +137,21 @@ export default function ElanlarListings() {
             <div className="sort-wrap flex items-center gap-[7px]">
               <p className="m-0 w-full text-[var(--Fourth)]">{t("sortLabel")}</p>
               <select
-                className="nice-select default cursor-not-allowed rounded-xl border border-[var(--Border)] bg-[var(--White)] px-3 py-2 text-sm text-[var(--Secondary)] opacity-80"
+                className="nice-select default cursor-pointer rounded-xl border border-[var(--Border)] bg-[var(--White)] px-3 py-2 text-sm text-[var(--Secondary)]"
                 tabIndex={0}
-                disabled
-                aria-disabled="true"
+                value={sortApi === "old" ? "old" : "new"}
+                onChange={(e) => {
+                  const next = e.target.value === "old" ? "old" : "new";
+                  const p = new URLSearchParams(searchParams.toString());
+                  if (next === "new") p.delete("sort");
+                  else p.set("sort", "old");
+                  const qs = p.toString();
+                  router.push(`/elanlar${qs ? `?${qs}` : ""}`);
+                }}
+                aria-label={t("sortLabel")}
               >
-                <option>{t("sortNewest")}</option>
+                <option value="new">{t("sortNewest")}</option>
+                <option value="old">{t("sortOldest")}</option>
               </select>
             </div>
           </div>

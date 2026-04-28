@@ -4,8 +4,12 @@ import { useTranslations } from "next-intl";
 import type { AttributeSection } from "@/services/dashboard/Add-New-Properties";
 
 export type ExtraFiltersState = {
-  min_bedrooms: string;
-  min_bathrooms: string;
+  /** GET /announcements — `room` (ümumi otaq; URL-də yalnız link kopyasından) */
+  room: string;
+  /** GET /announcements — `bedroom` (köhnə `min_bedrooms` uyğunluğu) */
+  bedroom: string;
+  /** GET /announcements — `bathroom` (köhnə `min_bathrooms` uyğunluğu) */
+  bathroom: string;
   min_area: string;
   max_area: string;
   min_price: string;
@@ -13,8 +17,9 @@ export type ExtraFiltersState = {
 };
 
 export const emptyExtraFilters = (): ExtraFiltersState => ({
-  min_bedrooms: "",
-  min_bathrooms: "",
+  room: "",
+  bedroom: "",
+  bathroom: "",
   min_area: "",
   max_area: "",
   min_price: "",
@@ -24,9 +29,12 @@ export const emptyExtraFilters = (): ExtraFiltersState => ({
 export function parseExtraFiltersFromParams(
   p: URLSearchParams,
 ): ExtraFiltersState {
+  const legacyBed = String(p.get("min_bedrooms") ?? "").trim();
+  const legacyBath = String(p.get("min_bathrooms") ?? "").trim();
   return {
-    min_bedrooms: String(p.get("min_bedrooms") ?? "").trim(),
-    min_bathrooms: String(p.get("min_bathrooms") ?? "").trim(),
+    room: String(p.get("room") ?? "").trim(),
+    bedroom: String(p.get("bedroom") ?? "").trim() || legacyBed,
+    bathroom: String(p.get("bathroom") ?? "").trim() || legacyBath,
     min_area: String(p.get("min_area") ?? "").trim(),
     max_area: String(p.get("max_area") ?? "").trim(),
     min_price: String(p.get("min_price") ?? "").trim(),
@@ -50,8 +58,9 @@ export function appendAdvancedFilterParams(
   extra: ExtraFiltersState,
   attributeSel: Record<string, boolean>,
 ) {
-  if (extra.min_bedrooms) p.set("min_bedrooms", extra.min_bedrooms);
-  if (extra.min_bathrooms) p.set("min_bathrooms", extra.min_bathrooms);
+  if (extra.room) p.set("room", extra.room);
+  if (extra.bedroom) p.set("bedroom", extra.bedroom);
+  if (extra.bathroom) p.set("bathroom", extra.bathroom);
   if (extra.min_area.trim()) p.set("min_area", extra.min_area.trim());
   if (extra.max_area.trim()) p.set("max_area", extra.max_area.trim());
   if (extra.min_price) p.set("min_price", extra.min_price);
@@ -94,11 +103,11 @@ export function PropertyAdvancedFilterPanelContent({
         <div className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
           <select
             className="h-14 w-full rounded-xl border border-[var(--Border)] bg-[var(--White)] px-4 text-[16px] font-medium text-[var(--Secondary)] outline-none"
-            value={extraFilters.min_bedrooms}
+            value={extraFilters.bedroom}
             onChange={(e) =>
               setExtraFilters((prev) => ({
                 ...prev,
-                min_bedrooms: e.target.value,
+                bedroom: e.target.value,
               }))
             }
           >
@@ -111,11 +120,11 @@ export function PropertyAdvancedFilterPanelContent({
           </select>
           <select
             className="h-14 w-full rounded-xl border border-[var(--Border)] bg-[var(--White)] px-4 text-[16px] font-medium text-[var(--Secondary)] outline-none"
-            value={extraFilters.min_bathrooms}
+            value={extraFilters.bathroom}
             onChange={(e) =>
               setExtraFilters((prev) => ({
                 ...prev,
-                min_bathrooms: e.target.value,
+                bathroom: e.target.value,
               }))
             }
           >

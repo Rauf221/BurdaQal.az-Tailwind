@@ -7,8 +7,10 @@ type AnnouncementsFilterOptions = {
 	search?: string
 	category_id?: string
 	region_id?: string
-	min_bedrooms?: string
-	min_bathrooms?: string
+	room?: string
+	bedroom?: string
+	bathroom?: string
+	sort?: string
 	min_area?: string
 	max_area?: string
 	min_price?: string
@@ -26,8 +28,10 @@ export function announcementsListQuery(
 	const search = filters?.search?.trim() ?? ''
 	const category_id = filters?.category_id?.trim() ?? ''
 	const region_id = filters?.region_id?.trim() ?? ''
-	const min_bedrooms = filters?.min_bedrooms?.trim() ?? ''
-	const min_bathrooms = filters?.min_bathrooms?.trim() ?? ''
+	const room = filters?.room?.trim() ?? ''
+	const bedroom = filters?.bedroom?.trim() ?? ''
+	const bathroom = filters?.bathroom?.trim() ?? ''
+	const sort = filters?.sort?.trim() ?? ''
 	const min_area = filters?.min_area?.trim() ?? ''
 	const max_area = filters?.max_area?.trim() ?? ''
 	const min_price = filters?.min_price?.trim() ?? ''
@@ -45,8 +49,10 @@ export function announcementsListQuery(
 			search,
 			category_id,
 			region_id,
-			min_bedrooms,
-			min_bathrooms,
+			room,
+			bedroom,
+			bathroom,
+			sort,
 			min_area,
 			max_area,
 			min_price,
@@ -61,8 +67,10 @@ export function announcementsListQuery(
 				search,
 				category_id,
 				region_id,
-				min_bedrooms,
-				min_bathrooms,
+				room,
+				bedroom,
+				bathroom,
+				sort,
 				min_area,
 				max_area,
 				min_price,

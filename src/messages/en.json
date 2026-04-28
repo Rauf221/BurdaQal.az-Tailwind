@@ -150,6 +150,7 @@
     "filterSubmit": "Search",
     "sortLabel": "Sort",
     "sortNewest": "Newest",
+    "sortOldest": "Oldest",
     "loadError": "Listings could not be loaded. Please try again shortly.",
     "loading": "Loading…",
     "emptyAll": "No listings yet.",
