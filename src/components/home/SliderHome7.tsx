@@ -17,6 +17,7 @@ import {
 } from "@/services/client/properties";
 import {
   appendAdvancedFilterParams,
+  emptyExtraFilters,
   PropertyAdvancedFilterPanel,
 } from "@/components/properties/PropertyAdvancedFilterPanel";
 import {
@@ -73,14 +74,7 @@ export default function SliderHome7() {
     category_id: "",
   });
   const [filterOpen, setFilterOpen] = useState(false);
-  const [extraFilters, setExtraFilters] = useState({
-    min_bedrooms: "",
-    min_bathrooms: "",
-    min_area: "",
-    max_area: "",
-    min_price: "",
-    max_price: "",
-  });
+  const [extraFilters, setExtraFilters] = useState(emptyExtraFilters);
   /** Seçilmiş imkanlar — açar: attribute id (string) */
   const [attributeSel, setAttributeSel] = useState<Record<string, boolean>>({});
   const [searchFieldFocused, setSearchFieldFocused] = useState(false);

@@ -95,6 +95,9 @@ export default function ElanlarFilterForm() {
     if (filters.category_id) p.set("category_id", filters.category_id);
     if (filters.region_id) p.set("region_id", filters.region_id);
     appendAdvancedFilterParams(p, extraFilters, attributeSel);
+    if (new URLSearchParams(searchParamsKey).get("sort") === "old") {
+      p.set("sort", "old");
+    }
     const q = p.toString();
     router.push(`/elanlar${q ? `?${q}` : ""}`);
     setFilterOpen(false);
