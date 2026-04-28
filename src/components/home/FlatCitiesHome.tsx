@@ -1,5 +1,7 @@
 "use client";
 
+import { memo } from "react";
+
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowUpRight } from "lucide-react";
@@ -18,11 +20,11 @@ const sliderCities2 = {
   modules: [Navigation],
   spaceBetween: 25,
   slidesPerView: "auto" as const,
-  observer: true,
-  observeParents: true,
+  observer: false,
+  observeParents: false,
   breakpoints: {
     0: { spaceBetween: 16 },
-    600: { spaceBetween: 25 },
+    600: { spaceBetween: 17 },
   },
   navigation: {
     prevEl: ".flat-cities-prev",
@@ -44,12 +46,12 @@ const CITY_PLACEHOLDER_GRADIENTS = [
 function CenterArrowCta() {
   return (
     <div
-      className="pointer-events-none absolute left-1/2 top-1/2 z-2 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-200 ease-out sm:group-hover:pointer-events-auto sm:group-hover:opacity-100 sm:group-focus-visible:pointer-events-auto sm:group-focus-visible:opacity-100"
+      className="pointer-events-none absolute left-1/2 top-1/2 z-2 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-200 ease-out sm:group-hover:pointer-events-auto sm:group-hover:opacity-100 sm:group-hover:will-change-[opacity] sm:group-focus-visible:pointer-events-auto sm:group-focus-visible:opacity-100"
       aria-hidden
     >
       <div className="group/icon flex h-12 w-12 items-center justify-center rounded-full border border-white bg-[rgba(0,0,0,0.4)] p-3">
         <ArrowUpRight
-          className="h-6 w-6 shrink-0 text-white transition-transform duration-200 ease-out sm:group-hover/icon:scale-[1.15]"
+          className="h-6 w-6 shrink-0 text-white transition-transform duration-200 ease-out sm:group-hover/icon:will-change-transform sm:group-hover/icon:scale-[1.15]"
           strokeWidth={2}
         />
       </div>
@@ -69,8 +71,15 @@ const swiperShellClass = "w-full min-w-0";
 const flatCitiesSwiperNavSvg =
   "[&_svg.swiper-navigation-icon]:!block [&_svg.swiper-navigation-icon]:!h-[20px] [&_svg.swiper-navigation-icon]:!w-[10.5px] [&_svg.swiper-navigation-icon]:shrink-0";
 
-function RegionCityCard({ region, idx }: { region: RandomRegionItem; idx: number }) {
-  const t = useTranslations("flatCitiesHome");
+const RegionCityCard = memo(function RegionCityCard({
+  region,
+  idx,
+  propertyCountLabel,
+}: {
+  region: RandomRegionItem;
+  idx: number;
+  propertyCountLabel: string;
+}) {
   return (
     <Link
       href={`/elanlar?region=${encodeURIComponent(region.slug)}`}
@@ -80,7 +89,9 @@ function RegionCityCard({ region, idx }: { region: RandomRegionItem; idx: number
         <img
           src={region.image}
           alt={region.name}
-          className="absolute inset-0 size-full max-w-none rounded-2xl object-cover transition-transform duration-500 ease-out sm:group-hover:scale-110 sm:group-focus-visible:scale-110"
+          decoding="async"
+          loading="lazy"
+          className="absolute inset-0 size-full max-w-none rounded-2xl object-cover backface-hidden transition-transform duration-500 ease-out sm:transform-[translateZ(0)] sm:group-hover:scale-110 sm:group-hover:will-change-transform sm:group-focus-visible:scale-110"
         />
       ) : (
         <div
@@ -92,19 +103,17 @@ function RegionCityCard({ region, idx }: { region: RandomRegionItem; idx: number
         className="pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-t from-transparent to-[rgba(0,0,0,0.5)]"
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[rgba(0,0,0,0.32)] max-sm:opacity-0! opacity-0 transition-opacity duration-500 ease-out sm:group-hover:opacity-100 sm:group-focus-visible:opacity-100" />
+      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[rgba(0,0,0,0.32)] max-sm:opacity-0! opacity-0 transition-opacity duration-500 ease-out sm:group-hover:opacity-100 sm:group-hover:will-change-[opacity] sm:group-focus-visible:opacity-100" />
       <div className="absolute left-5 top-5 z-[1] flex flex-col gap-1 text-white not-italic ">
         <p className="text-sm font-medium leading-5">
-          {t("propertyCount", {
-            count: region.announcements_count ?? 0,
-          })}
+          {propertyCountLabel}
         </p>
         <p className="text-xl font-semibold leading-6">{region.name}</p>
       </div>
       <CenterArrowCta />
     </Link>
   );
-}
+});
 
 export default function FlatCitiesHome() {
   const locale = useLocale();
@@ -176,7 +185,13 @@ export default function FlatCitiesHome() {
                     <Swiper {...sliderCities2} className={swiperShellClass}>
                       {regions.map((region, idx) => (
                         <SwiperSlide key={region.id} className={slideW}>
-                          <RegionCityCard region={region} idx={idx} />
+                          <RegionCityCard
+                            region={region}
+                            idx={idx}
+                            propertyCountLabel={t("propertyCount", {
+                              count: region.announcements_count ?? 0,
+                            })}
+                          />
                         </SwiperSlide>
                       ))}
                     </Swiper>
@@ -202,6 +217,9 @@ export default function FlatCitiesHome() {
                         key={region.id}
                         region={region}
                         idx={idx}
+                        propertyCountLabel={t("propertyCount", {
+                          count: region.announcements_count ?? 0,
+                        })}
                       />
                     ))}
                   </div>
