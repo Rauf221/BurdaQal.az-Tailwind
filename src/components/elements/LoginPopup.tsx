@@ -13,6 +13,8 @@ import {
 } from "@/services/client/auth/mutations";
 import { getAxiosErrorMessage } from "@/services/client/auth/apiMessage";
 import OtpSixDigitBlock from "@/components/elements/OtpSixDigitBlock";
+import PasswordInput from "@/components/elements/PasswordInput";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const authSideImageCls =
   "h-full min-h-[200px] w-full min-w-0 bg-gradient-to-br from-[var(--Primary)]/90 via-[var(--Secondary)] to-[#0a0a0a] md:min-h-full";
@@ -179,6 +181,8 @@ export default function LoginPopup({
     verifyForgotMutation.isPending ||
     resetMutation.isPending;
 
+  useBodyScrollLock({ locked: isLogin });
+
   if (!isLogin) return null;
 
   return (
@@ -218,7 +222,7 @@ export default function LoginPopup({
             </div>
           </div>
 
-          <div className="flex w-full flex-1 flex-col overflow-y-auto p-6 md:p-10">
+          <div className="flex w-full flex-1 flex-col  justify-center overflow-y-auto p-6 md:p-10">
             {view === "login" && (
               <>
                 <h4
@@ -244,20 +248,22 @@ export default function LoginPopup({
                     />
                   </fieldset>
                   <fieldset className="m-0 border-0 p-0">
-                    <input
-                      type="password"
+                    <PasswordInput
                       placeholder={t("password")}
                       name="password"
                       autoComplete="current-password"
                       value={password}
-                      onChange={(ev) => setPassword(ev.target.value)}
+                      onValueChange={setPassword}
                       required
                       className={inputCls}
                     />
                   </fieldset>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <label className="flex cursor-pointer items-center gap-2 text-sm text-[var(--Text)]">
-                      <input type="checkbox" className="h-4 w-4 rounded" />
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 rounded accent-[var(--Primary)]"
+                      />
                       <span>{t("rememberMe")}</span>
                     </label>
                     <button
@@ -290,32 +296,7 @@ export default function LoginPopup({
                     {t("registerHere")}
                   </button>
                 </div>
-                <ul className="mt-6 flex list-none justify-center gap-3 p-0">
-                  <li>
-                    <Link
-                      href="/"
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--Border)] text-[var(--Secondary)] hover:bg-[#f9f9f9]"
-                    >
-                      G
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/"
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--Border)] text-[var(--Secondary)] hover:bg-[#f9f9f9]"
-                    >
-                      X
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/"
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--Border)] text-[var(--Secondary)] hover:bg-[#f9f9f9]"
-                    >
-                      f
-                    </Link>
-                  </li>
-                </ul>
+             
               </>
             )}
 
@@ -428,21 +409,19 @@ export default function LoginPopup({
                     <p className="text-sm text-red-600">{formError}</p>
                   ) : null}
                   <fieldset className="m-0 border-0 p-0">
-                    <input
-                      type="password"
+                    <PasswordInput
                       placeholder={t("newPassword")}
                       value={newPassword}
-                      onChange={(ev) => setNewPassword(ev.target.value)}
+                      onValueChange={setNewPassword}
                       required
                       className={inputCls}
                     />
                   </fieldset>
                   <fieldset className="m-0 border-0 p-0">
-                    <input
-                      type="password"
+                    <PasswordInput
                       placeholder={t("confirmPassword")}
                       value={newPassword2}
-                      onChange={(ev) => setNewPassword2(ev.target.value)}
+                      onValueChange={setNewPassword2}
                       required
                       className={inputCls}
                     />

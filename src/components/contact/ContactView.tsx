@@ -3,7 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
 import { ArrowRight, Check, Mail, MapPin, Phone } from "lucide-react";
 import {
   getContactMapExternalUrl,
@@ -11,18 +10,15 @@ import {
   useContactFormMutation,
 } from "@/services/client/contact";
 import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
+import { toast } from "@/lib/toast";
 
 export default function ContactView() {
   const locale = useLocale();
   const t = useTranslations("contact");
-  const { data, isPending } = useQuery(getContactQuery(locale));
+  const { data } = useQuery(getContactQuery(locale));
   const contact = data?.data;
   const mapLink = getContactMapExternalUrl(contact);
 
-  const [formMsg, setFormMsg] = useState<{
-    type: "ok" | "err";
-    text: string;
-  } | null>(null);
   const contactMutation = useContactFormMutation(locale);
 
   const addressText = contact?.address?.trim() || t("fallbackAddress");
@@ -31,7 +27,6 @@ export default function ContactView() {
 
   const onSubmitMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setFormMsg(null);
     const form = e.currentTarget;
     const fd = new FormData(form);
     const name = String(fd.get("name") || "").trim();
@@ -40,18 +35,15 @@ export default function ContactView() {
     const note = String(fd.get("note") || "").trim();
     try {
       await contactMutation.mutateAsync({ name, email, phone, note });
-      setFormMsg({ type: "ok", text: t("success") });
+      toast.success(t("success"));
       form.reset();
     } catch {
-      setFormMsg({
-        type: "err",
-        text: t("error"),
-      });
+      toast.error(t("error"));
     }
   };
 
   const fieldCls =
-    "w-full rounded-xl border border-[#E1E1E1] bg-[var(--White)] px-[18px] py-3 text-[15px] font-normal leading-7 text-[var(--Secondary)] outline-none placeholder:text-[var(--Secondary)] focus:border-[var(--Secondary)]";
+    "w-full rounded-xl border border-[#E1E1E1] bg-[var(--White)] px-[18px] py-3 text-[15px] font-normal leading-7 text-[var(--Secondary)] outline-none placeholder:text-[var(--Secondary)] focus:border-[var(--Secondary)] focus:placeholder-transparent";
 
   return (
     <div>
@@ -242,17 +234,6 @@ export default function ContactView() {
                   </p>
                 </label>
               </div>
-              {formMsg ? (
-                <p
-                  className="m-0 text-[15px] leading-6"
-                  style={{
-                    marginBottom: 12,
-                    color: formMsg.type === "ok" ? "#198754" : "#c62828",
-                  }}
-                >
-                  {formMsg.text}
-                </p>
-              ) : null}
               <div className="button-submit">
                 <button
                   className="tf-button-primary inline-flex w-full max-w-none items-center justify-center gap-2.5 rounded-xl border-0 bg-[var(--Primary)] px-[26px] py-[18px] text-[15px] font-medium leading-[18px] text-[var(--White)] transition-colors hover:bg-[#6fb042] disabled:opacity-60"

@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Roboto, Geist } from "next/font/google";
 import Script from "next/script";
 import LenisRoot from "@/components/lenis/LenisRoot";
+import { AppToaster } from "@/components/ui/toaster";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700", "900"],
@@ -25,12 +29,13 @@ export default function RootLayout({
     <html
       lang="az"
       suppressHydrationWarning
-      className={`${roboto.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", roboto.variable, "font-sans", geist.variable)}
     >
       <body className={`${roboto.className} flex min-h-full flex-col`}>
         <LenisRoot>
           {children}
         </LenisRoot>
+        <AppToaster />
         <Script
           src="https://app.inlyne.ai/scripts/preview.js"
           strategy="afterInteractive"

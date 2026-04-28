@@ -12,6 +12,7 @@ import {
   type MyAnnouncementItem,
 } from "@/services/dashboard/My-properties";
 import { FadeIn } from "@/components/motion";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const wgBoxCls =
   "mb-20 rounded-3xl border border-[var(--Border)] bg-[var(--White)] py-10 pl-6 pr-6 last:mb-0 md:pl-11 md:pr-[39px]";
@@ -74,6 +75,8 @@ export default function DashboardMyPropertiesClient() {
   const [page, setPage] = useState(1);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null);
+
+  useBodyScrollLock({ locked: Boolean(deleteTarget) });
 
   const q = useQuery(myAnnouncementsListQuery(locale, page));
   const deleteM = useDeleteAnnouncementMutation(locale);

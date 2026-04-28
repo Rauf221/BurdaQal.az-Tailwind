@@ -76,11 +76,15 @@ export default function AboutFaqSection() {
                   >
                     <span
                       className={
-                        "absolute right-0 top-1/2 block h-0.5 w-4 -translate-y-1/2 bg-[var(--Secondary)] transition-opacity " +
+                        "absolute right-0 top-1/2 block h-0.5 w-4 -translate-y-1/2 bg-[var(--Secondary)]"
+                      }
+                    />
+                    <span
+                      className={
+                        "absolute right-[7px] top-1/2 block h-4 w-0.5 -translate-y-1/2 bg-[var(--Secondary)] transition-opacity " +
                         (isOpen ? "opacity-0" : "opacity-100")
                       }
                     />
-                    <span className="absolute right-[7px] top-1/2 block h-4 w-0.5 -translate-y-1/2 bg-[var(--Secondary)]" />
                   </span>
                 </h4>
                 {isOpen ? (

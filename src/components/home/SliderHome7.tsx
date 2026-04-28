@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import { ChevronDown, ImageOff, Search, SlidersHorizontal } from "lucide-react";
+import { ImageOff, Search, SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { EffectFade, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -20,6 +20,13 @@ import {
   emptyExtraFilters,
   PropertyAdvancedFilterPanel,
 } from "@/components/properties/PropertyAdvancedFilterPanel";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   attributesListQuery,
   categoriesListQuery,
@@ -41,6 +48,8 @@ const sliderCfg = {
     clickable: true,
   },
 };
+
+const ALL_SELECT_VALUE = "__all__";
 
 function TitleLines({ text }: { text: string | undefined }) {
   const lines = String(text || "")
@@ -318,30 +327,27 @@ export default function SliderHome7() {
               <div className="title mb-[5px] text-[13px] font-normal leading-[15px] text-[#8b8b8b]">
                 {t("region")}
               </div>
-              <div className="relative">
-                <select
-                  className="nice-select style-white h-[26px] w-full cursor-pointer appearance-none border-0 bg-transparent p-0 pr-6 text-[15px] font-medium leading-[26px] text-[#a8a8a8] outline-none"
-                  name="region_id"
-                  value={filters.region_id}
-                  onChange={(e) =>
-                    setFilters((p) => ({ ...p, region_id: e.target.value }))
-                  }
-                >
-                  <option value="" className="text-[var(--Secondary)]">
-                    {t("all")}
-                  </option>
+              <Select
+                value={filters.region_id || undefined}
+                onValueChange={(value) =>
+                  setFilters((p) => ({
+                    ...p,
+                    region_id: value === ALL_SELECT_VALUE ? "" : value,
+                  }))
+                }
+              >
+                <SelectTrigger className="h-[26px] w-full border-0 bg-transparent p-0 pr-6 text-[15px] font-medium leading-[26px] text-[#a8a8a8] shadow-none focus-visible:ring-0 [&_[data-slot=select-value]]:text-[#a8a8a8] [&_[data-slot=select-value][data-placeholder]]:text-[#a8a8a8]">
+                  <SelectValue placeholder={t("all")} />
+                </SelectTrigger>
+                <SelectContent position="popper" align="start">
+                  <SelectItem value={ALL_SELECT_VALUE}>{t("all")}</SelectItem>
                   {regions.map((region) => (
-                    <option
-                      key={region.id}
-                      value={String(region.id)}
-                      className="text-[var(--Secondary)]"
-                    >
+                    <SelectItem key={region.id} value={String(region.id)}>
                       {region.name}
-                    </option>
+                    </SelectItem>
                   ))}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-0 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8a8a8a]" />
-              </div>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="divider-1 hidden h-[36px] w-px shrink-0 bg-white/10 md:block" />
@@ -350,30 +356,27 @@ export default function SliderHome7() {
               <div className="title mb-[5px] text-[13px] font-normal leading-[15px] text-[#8b8b8b]">
                 {t("category")}
               </div>
-              <div className="relative">
-                <select
-                  className="nice-select h-[26px] w-full cursor-pointer appearance-none border-0 bg-transparent p-0 pr-6 text-[15px] font-medium leading-[26px] text-[#a8a8a8] outline-none"
-                  name="category_id"
-                  value={filters.category_id}
-                  onChange={(e) =>
-                    setFilters((p) => ({ ...p, category_id: e.target.value }))
-                  }
-                >
-                  <option value="" className="text-[var(--Secondary)]">
-                    {t("all")}
-                  </option>
+              <Select
+                value={filters.category_id || undefined}
+                onValueChange={(value) =>
+                  setFilters((p) => ({
+                    ...p,
+                    category_id: value === ALL_SELECT_VALUE ? "" : value,
+                  }))
+                }
+              >
+                <SelectTrigger className="h-[26px] w-full border-0 bg-transparent p-0 pr-6 text-[15px] font-medium leading-[26px] text-[#a8a8a8] shadow-none focus-visible:ring-0 [&_[data-slot=select-value]]:text-[#a8a8a8] [&_[data-slot=select-value][data-placeholder]]:text-[#a8a8a8]">
+                  <SelectValue placeholder={t("all")} />
+                </SelectTrigger>
+                <SelectContent position="popper" align="start">
+                  <SelectItem value={ALL_SELECT_VALUE}>{t("all")}</SelectItem>
                   {categories.map((category) => (
-                    <option
-                      key={category.id}
-                      value={String(category.id)}
-                      className="text-[var(--Secondary)]"
-                    >
+                    <SelectItem key={category.id} value={String(category.id)}>
                       {category.name}
-                    </option>
+                    </SelectItem>
                   ))}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-0 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8a8a8a]" />
-              </div>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>

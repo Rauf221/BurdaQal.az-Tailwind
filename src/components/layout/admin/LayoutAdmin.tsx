@@ -36,16 +36,12 @@ export default function LayoutAdmin({ breadcrumbTitle, children }: LayoutAdminPr
   const handleLogin = () => {
     const next = !isLogin;
     setLogin(next);
-    if (next) document.body.classList.add("modal-open");
-    else document.body.classList.remove("modal-open");
   };
 
   const [isRegister, setRegister] = useState(false);
   const handleRegister = () => {
     const next = !isRegister;
     setRegister(next);
-    if (next) document.body.classList.add("modal-open");
-    else document.body.classList.remove("modal-open");
   };
 
   useEffect(() => {
@@ -66,7 +62,6 @@ export default function LayoutAdmin({ breadcrumbTitle, children }: LayoutAdminPr
     const params = new URLSearchParams(window.location.search);
     if (params.get("login") !== "1") return;
     setLogin(true);
-    document.body.classList.add("modal-open");
     params.delete("login");
     const q = params.toString();
     const next =

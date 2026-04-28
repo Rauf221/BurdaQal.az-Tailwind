@@ -19,9 +19,11 @@ import {
 } from "@/services/client/auth/profileParse";
 import { getUserProfileQuery } from "@/services/client/auth/queries";
 import { FadeIn } from "@/components/motion";
+import { toast } from "@/lib/toast";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const wgBoxCls =
-  "mb-20 rounded-3xl border border-[var(--Border)] bg-[var(--White)] py-[39px] pr-[39px] pl-11 last:mb-0";
+  "mb-10 rounded-3xl border border-[var(--Border)] bg-[var(--White)] py-[39px] pr-[39px] pl-11 last:mb-0";
 const h4Cls = "-mt-2 mb-[33px] text-[22px] font-semibold leading-8 text-[var(--Secondary)]";
 const fieldCls =
   "box-border w-full rounded-xl border border-[var(--Border)] bg-[var(--White)] px-[19px] py-3 text-base text-[var(--Secondary)] outline-none focus:border-[var(--Fourth)]";
@@ -100,6 +102,8 @@ export default function DashboardMyProfileClient() {
   const updateMutation = useUpdateProfileMutation(locale);
   const passwordMutation = usePasswordChangeMutation(locale);
 
+  useBodyScrollLock({ locked: otpModalOpen });
+
   const resolvedServer = resolveUserMediaUrl(serverImagePath);
   const avatarSrc = imagePreview || resolvedServer;
 
@@ -115,7 +119,6 @@ export default function DashboardMyProfileClient() {
   };
 
   const applyProfileSaveSuccess = (payload: { email: string }) => {
-    setProfileOk(t("profileOk"));
     setSavedEmailRaw(payload.email.trim());
     setBaselineEmailNorm(normalizeEmail(payload.email));
     setImageFile(null);
@@ -127,9 +130,16 @@ export default function DashboardMyProfileClient() {
 
   const runProfileUpdate = (payload: ProfilePayload) => {
     updateMutation.mutate(payload, {
-      onSuccess: () => applyProfileSaveSuccess(payload),
+      onSuccess: () => {
+        applyProfileSaveSuccess(payload);
+        const msg = t("profileOk");
+        setProfileOk(msg);
+        toast.success(msg);
+      },
       onError: (err) => {
-        setProfileError(getAxiosErrorMessage(err, t("profileErr")));
+        const msg = getAxiosErrorMessage(err, t("profileErr"));
+        setProfileError(msg);
+        toast.error(msg);
       },
     });
   };
@@ -210,13 +220,15 @@ export default function DashboardMyProfileClient() {
             updateMutation.mutate(toSave, {
               onSuccess: () => {
                 applyProfileSaveSuccess({ ...toSave, email: toSave.email });
-                setProfileOk(t("otpProfileOk"));
+                const msg = t("otpProfileOk");
+                setProfileOk(msg);
+                toast.success(msg);
                 setEmail(toSave.email);
               },
               onError: (err) => {
-                setProfileError(
-                  getAxiosErrorMessage(err, t("otpProfilePartial")),
-                );
+                const msg = getAxiosErrorMessage(err, t("otpProfilePartial"));
+                setProfileError(msg);
+                toast.error(msg);
               },
             });
           });

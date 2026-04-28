@@ -9,6 +9,8 @@ import {
 } from "@/services/client/auth/mutations";
 import { getAxiosErrorMessage } from "@/services/client/auth/apiMessage";
 import OtpSixDigitBlock from "@/components/elements/OtpSixDigitBlock";
+import PasswordInput from "@/components/elements/PasswordInput";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const authSideImageCls =
   "h-full min-h-[200px] w-full min-w-0 bg-gradient-to-br from-[var(--Primary)]/90 via-[var(--Secondary)] to-[#0a0a0a] md:min-h-full";
@@ -121,6 +123,8 @@ export default function RegisterPopup({
 
   const busy = registerMutation.isPending || verifyMutation.isPending;
 
+  useBodyScrollLock({ locked: isRegister });
+
   if (!isRegister) return null;
 
   return (
@@ -160,7 +164,7 @@ export default function RegisterPopup({
           </div>
         </div>
 
-        <div className="flex w-full flex-1 flex-col overflow-y-auto p-6 md:p-10">
+        <div className="flex w-full flex-1 flex-col  justify-center overflow-y-auto p-6 md:p-10">
           {step === "form" && (
             <>
               <p className="mb-1 text-xs opacity-75">{t("step12")}</p>
@@ -208,23 +212,21 @@ export default function RegisterPopup({
                   />
                 </fieldset>
                 <fieldset className="m-0 border-0 p-0">
-                  <input
-                    type="password"
+                  <PasswordInput
                     placeholder={t("password")}
                     name="password"
                     value={password}
-                    onChange={(ev) => setPassword(ev.target.value)}
+                    onValueChange={setPassword}
                     required
                     className={inputCls}
                   />
                 </fieldset>
                 <fieldset className="m-0 border-0 p-0">
-                  <input
-                    type="password"
+                  <PasswordInput
                     placeholder={t("retypePassword")}
                     name="password_confirmation"
                     value={password2}
-                    onChange={(ev) => setPassword2(ev.target.value)}
+                    onValueChange={setPassword2}
                     required
                     className={inputCls}
                   />

@@ -430,7 +430,8 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                                   ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationLine)}`
                                   : "/#"
                               }
-                              className="tf-button-green"
+                              className="tf-button-green "
+                              target="_blank"
                             >
                               <MapPin className="h-4 w-4" strokeWidth={1.75} />
                               {t("openInGoogleMaps")}
