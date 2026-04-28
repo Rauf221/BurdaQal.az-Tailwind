@@ -121,6 +121,7 @@
     "requestFailed": "Request failed."
   },
   "footer": {
+    "ariaLabel": "Site footer — newsletter, links, and contact",
     "followUs": "Follow us",
     "subscribe": "Subscribe",
     "emailPlaceholder": "Your email",
@@ -190,8 +191,9 @@
     "nextSlide": "Next districts"
   },
   "flatNewsHome": {
-    "title": "Helpful articles",
-    "subtitle": "District guides, choosing a home, and everything useful for your stay — all in one place."
+    "title": "Useful blogs",
+    "subtitle": "District guides, choosing a home, and everything useful for your stay — all in one place.",
+    "seeMore": "See more"
   },
   "sliderNewsHome": {
     "loadError": "Blog posts could not be loaded.",
@@ -262,7 +264,9 @@
     "breadcrumbHome": "Home",
     "loadError": "Could not load the blog list. Please try again shortly.",
     "emptyFilter": "No posts for this filter.",
-    "readMore": "Read more"
+    "readMore": "Read more",
+    "relatedTitle": "Related posts",
+    "relatedSubtitle": "Explore more articles on similar topics."
   },
   "aboutPage": {
     "teamTitle": "Meet our team of experts",

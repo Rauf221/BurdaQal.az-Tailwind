@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { ChevronDown, ImageOff, Search, SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { EffectFade, Navigation } from "swiper/modules";
+import { Autoplay, EffectFade, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -28,10 +28,14 @@ import {
 } from "@/services/dashboard/Add-New-Properties";
 
 const sliderCfg = {
-  modules: [Navigation, EffectFade],
+  modules: [Navigation, EffectFade, Autoplay],
   spaceBetween: 0,
   slidesPerView: 1,
   observer: true,
+  autoplay: {
+    delay: 5000,
+    disableOnInteraction: false,
+  },
   observeParents: true,
   effect: "fade" as const,
   fadeEffect: { crossFade: true },

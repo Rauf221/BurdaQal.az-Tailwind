@@ -2,24 +2,11 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight } from "lucide-react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { blogPostPath } from "@/lib/blogRoutes";
+import { BlogCard } from "@/components/elements/blog-card/BlogCard";
+import { BLOG_LIST } from "@/lib/blogRoutes";
 import { getBlogsQuery } from "@/services/client/blogs/queries";
-
-const sliderNews = {
-  spaceBetween: 28,
-  slidesPerView: 4,
-  observer: true,
-  observeParents: true,
-  breakpoints: {
-    0: { slidesPerView: 1 },
-    600: { slidesPerView: 2 },
-    1400: { slidesPerView: 4 },
-  },
-};
 
 const FALLBACK_BLOG_IMAGES = [
   "/images/image-box/img-1.svg",
@@ -29,83 +16,68 @@ const FALLBACK_BLOG_IMAGES = [
 
 export default function SliderNewsHome() {
   const locale = useLocale();
+  const tf = useTranslations("flatNewsHome");
   const t = useTranslations("sliderNewsHome");
-  const tc = useTranslations("common");
   const { data: blogsPayload, isPending, isError } = useQuery(
-    getBlogsQuery(locale, { page: 1 })
+    getBlogsQuery(locale, { page: 1 }),
   );
-  const latestBlogs = (blogsPayload?.data ?? []).slice(0, 4);
+  const latestBlogs = (blogsPayload?.data ?? []).slice(0, 3);
 
   return (
-    <Swiper {...sliderNews}>
+    <>
       {isPending ? (
-        <SwiperSlide>
-          <div className="wg-blog mb-0 overflow-hidden rounded-2xl transition-shadow hover:shadow-[0px_6px_15px_0px_#404F680D]">
-            <div className="content has-border rounded-b-2xl border border-[var(--Border)] border-t-0 bg-[var(--White)] px-6 pb-8 pt-6 text-center">
-              <p className="mb-0 py-12 text-[var(--Text)]">{tc("ellipsis")}</p>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex flex-col gap-4">
+              <div className="h-[318px] animate-pulse rounded-2xl bg-[#dfe1e4]" aria-hidden />
+              <div className="flex flex-col gap-3 px-2">
+                <div className="flex gap-2">
+                  <div className="h-5 w-24 animate-pulse rounded bg-[#dfe1e4]" />
+                  <div className="h-5 w-32 animate-pulse rounded bg-[#dfe1e4]" />
+                </div>
+                <div className="h-14 w-full animate-pulse rounded bg-[#dfe1e4]" />
+              </div>
             </div>
-          </div>
-        </SwiperSlide>
+          ))}
+        </div>
       ) : null}
-      {!isPending &&
-        !isError &&
-        latestBlogs.length > 0 &&
-        latestBlogs.map((post, i) => (
-          <SwiperSlide key={post.slug}>
-            <div className="wg-blog mb-0 flex h-full flex-col overflow-hidden rounded-2xl transition-shadow hover:shadow-[0px_6px_15px_0px_#404F680D]">
-              <div className="image h-[225px] overflow-hidden">
-                <img
-                  src={
-                    post.thumb_image ||
-                    post.image ||
-                    FALLBACK_BLOG_IMAGES[i % FALLBACK_BLOG_IMAGES.length]
-                  }
-                  alt={post.title}
-                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
-                />
-              </div>
-              <div className="content has-border flex flex-1 flex-col rounded-b-2xl border border-[var(--Border)] border-t-0 bg-[var(--White)] px-6 pb-8 pt-6 text-center">
-                <div className="sub-blog mb-3 flex flex-wrap items-center justify-center gap-6">
-                  <div className="relative text-[15px] leading-7 text-[var(--Text)] after:absolute after:-right-3.5 after:top-1/2 after:h-1 after:w-1 after:-translate-y-1/2 after:rounded-full after:bg-[var(--Text)] last:after:hidden">
-                    {post.tags?.[0]?.name ?? tc("blogFallbackTag")}
-                  </div>
-                  <div className="text-[15px] leading-7 text-[var(--Text)]">
-                    {post.created_at ?? tc("dash")}
-                  </div>
-                </div>
-                <div className="name mb-6 min-h-[56px] text-[17px] font-medium leading-7 text-[var(--Secondary)]">
-                  <Link
-                    href={blogPostPath(post.slug)}
-                    className="line-clamp-2 text-[var(--Secondary)] hover:underline"
-                  >
-                    {post.title}
-                  </Link>
-                </div>
-                <Link
-                  href={blogPostPath(post.slug)}
-                  className="tf-button-no-bg mx-auto mt-auto inline-flex items-center gap-2 text-[15px] font-medium leading-[18px] text-[var(--Secondary)] hover:text-[var(--Primary)]"
-                >
-                  {t("readMore")}
-                  <ArrowRight className="h-[18px] w-[18px]" />
-                </Link>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
+
+      {!isPending && !isError && latestBlogs.length > 0 ? (
+        <div className="flex flex-col gap-12">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {latestBlogs.map((post, i) => {
+              const thumb =
+                post.thumb_image ||
+                post.image ||
+                FALLBACK_BLOG_IMAGES[i % FALLBACK_BLOG_IMAGES.length];
+              return (
+                <BlogCard key={post.slug} post={post} imageSrc={thumb} />
+              );
+            })}
+          </div>
+          <div className="flex justify-center">
+            <Link
+              href={BLOG_LIST}
+              className="inline-flex items-center gap-2 text-[16px] font-medium leading-normal text-[#525658] transition-colors hover:text-[var(--Primary)]"
+            >
+              {tf("seeMore")}
+              <ChevronRight className="size-5 shrink-0" strokeWidth={2} aria-hidden />
+            </Link>
+          </div>
+        </div>
+      ) : null}
+
       {!isPending && isError ? (
-        <SwiperSlide>
-          <div className="wg-blog rounded-2xl border border-[var(--Border)] bg-[var(--White)] p-8 text-center text-sm text-[var(--Text)]">
-            {t("loadError")}
-          </div>
-        </SwiperSlide>
+        <p className="rounded-2xl border border-[var(--Border)] bg-[var(--White)] px-6 py-8 text-center text-sm text-[var(--Text)]">
+          {t("loadError")}
+        </p>
       ) : null}
+
       {!isPending && !isError && latestBlogs.length === 0 ? (
-        <SwiperSlide>
-          <div className="wg-blog rounded-2xl border border-[var(--Border)] bg-[var(--White)] p-8 text-center text-sm text-[var(--Text)]">
-            {t("empty")}
-          </div>
-        </SwiperSlide>
+        <p className="rounded-2xl border border-[var(--Border)] bg-[var(--White)] px-6 py-8 text-center text-sm text-[var(--Text)]">
+          {t("empty")}
+        </p>
       ) : null}
-    </Swiper>
+    </>
   );
 }
