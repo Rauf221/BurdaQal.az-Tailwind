@@ -131,7 +131,6 @@ export default function WorkWithUsHome() {
                           rooms={d?.room ?? null}
                           emptyLabel={tc("dash")}
                           images={announcementCardImages(row.media)}
-                          autoplayOnHover
                           className="w-full max-w-full"
                         />
                       </div>

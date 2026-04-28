@@ -556,7 +556,6 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                               images={imgs}
                               mediaReady
                               badge={tl("tagListing")}
-                              autoplayOnHover
                               className="w-full max-w-full"
                             />
                           </FadeInStaggerItem>

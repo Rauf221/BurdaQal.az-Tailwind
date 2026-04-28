@@ -2,7 +2,7 @@
 
 import { useId, useRef } from "react";
 import type { Swiper as SwiperType } from "swiper";
-import { Autoplay, Pagination } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 import { ImageOff } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -32,7 +32,6 @@ export type ElanlarCardProps = {
   emptyLabel?: string;
   badge?: string;
   mediaReady?: boolean;
-  autoplayOnHover?: boolean;
   onSwiperReady?: (swiper: SwiperType) => void;
 };
 
@@ -54,7 +53,6 @@ export default function ElanlarCard({
   emptyLabel = "—",
   badge,
   mediaReady = true,
-  autoplayOnHover = false,
   onSwiperReady,
 }: ElanlarCardProps) {
   const uid = useId().replace(/:/g, "");
@@ -64,7 +62,6 @@ export default function ElanlarCard({
   const hasImage = images.length > 0;
   const multi = images.length > 1;
 
-  const showAutoplay = Boolean(autoplayOnHover && multi && mediaReady);
   const priceContent =
     priceLine != null && String(priceLine).length > 0
       ? String(priceLine)
@@ -81,12 +78,6 @@ export default function ElanlarCard({
       className={`group ${CARD_FRAME} ${className}`.trim()}
       data-figma-default="2116:7177"
       data-figma-hover="2116:7155"
-      onMouseEnter={() => {
-        if (showAutoplay) swiperRef.current?.autoplay?.start();
-      }}
-      onMouseLeave={() => {
-        if (showAutoplay) swiperRef.current?.autoplay?.stop();
-      }}
     >
       <div className="relative h-[312px] w-full box-border">
         {badge ? (
@@ -100,26 +91,16 @@ export default function ElanlarCard({
           {hasImage && multi ? (
             <>
               <Swiper
-                modules={[Pagination, Autoplay]}
+                modules={[Pagination]}
                 slidesPerView={1}
                 spaceBetween={0}
                 pagination={{
                   el: `.${paginationClass}`,
                   clickable: true,
                 }}
-                autoplay={
-                  showAutoplay
-                    ? {
-                        delay: 3000,
-                        disableOnInteraction: false,
-                        pauseOnMouseEnter: true,
-                      }
-                    : false
-                }
                 onSwiper={(s) => {
                   swiperRef.current = s;
                   onSwiperReady?.(s);
-                  if (showAutoplay) s.autoplay?.stop();
                 }}
                 className="elanlar-card-swiper m-0! h-full w-full"
               >

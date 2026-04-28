@@ -68,7 +68,6 @@ const PropertyCard = memo(function PropertyCard({
         images={images}
         mediaReady={isVisible}
         badge={t("tagListing")}
-        autoplayOnHover
         className="w-full max-w-full"
       />
     </div>
