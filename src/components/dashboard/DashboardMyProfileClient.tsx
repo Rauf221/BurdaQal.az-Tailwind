@@ -326,10 +326,10 @@ export default function DashboardMyProfileClient() {
                 />
               ) : (
                 <div
-                  className="flex h-full w-full items-center justify-center rounded-full bg-[#e8e8e8] text-[var(--Text)]/40"
+                  className="flex h-full w-full items-center justify-center rounded-full  text-[var(--Text)]/40"
                   aria-hidden
                 >
-                  <User className="h-16 w-16" strokeWidth={1.5} />
+                  <img src="/images/elnurbey.jpg" alt="" className="h-full w-full rounded-full object-cover" />
                 </div>
               )}
               <div

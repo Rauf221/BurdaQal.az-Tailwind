@@ -31,7 +31,7 @@ export function ElanlarCardNavArrows({
     <div className="pointer-events-none absolute inset-0 z-3">
       <button
         type="button"
-        className={`pointer-events-auto absolute top-1/2 -translate-y-1/2 rounded-full border border-white bg-white p-0 text-jh-secondary opacity-0 max-sm:hidden sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 ${btn}`}
+        className={`pointer-events-auto absolute top-1/2 -translate-y-1/2 rounded-full border border-white bg-white p-0 text-jh-secondary opacity-0 max-sm:hidden sm:group-hover:opacity-100 ${btn}`}
         aria-label={prevLabel}
         onClick={(e) => {
           e.preventDefault();
@@ -43,7 +43,7 @@ export function ElanlarCardNavArrows({
       </button>
       <button
         type="button"
-        className={`pointer-events-auto absolute top-1/2 -translate-y-1/2 rounded-full border border-white bg-white p-0 text-jh-secondary opacity-0 max-sm:hidden sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 ${btnRight}`}
+        className={`pointer-events-auto absolute top-1/2 -translate-y-1/2 rounded-full border border-white bg-white p-0 text-jh-secondary opacity-0 max-sm:hidden sm:group-hover:opacity-100 ${btnRight}`}
         aria-label={nextLabel}
         onClick={(e) => {
           e.preventDefault();

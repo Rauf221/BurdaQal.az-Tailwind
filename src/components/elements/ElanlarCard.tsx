@@ -160,6 +160,7 @@ export default function ElanlarCard({
                 modules={[Pagination]}
                 slidesPerView={1}
                 spaceBetween={0}
+                rewind
                 pagination={{
                   el: `.${paginationClass}`,
                   clickable: true,

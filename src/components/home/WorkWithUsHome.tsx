@@ -144,7 +144,7 @@ export default function WorkWithUsHome() {
         </div>
 
         <div className="row -mx-[14px]">
-          <div className="col-12 px-[14px] text-center">
+          <div className="col-12 px-[14px] text-center pt-4 md:pt-10">
             <Link
               href="/elanlar"
               className="tf-button-primary border-radius-corner mx-auto mt-4 inline-flex items-center justify-center gap-2.5 rounded-[999px] bg-[var(--Primary)] px-[26px] py-[18px] text-[15px] font-medium leading-[18px] text-[var(--White)] transition-[background] hover:bg-[#6fb042]"

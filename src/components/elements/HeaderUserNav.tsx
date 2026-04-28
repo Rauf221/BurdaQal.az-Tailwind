@@ -9,6 +9,7 @@ import { routing } from "@/i18n/routing";
 import { useLogoutMutation } from "@/services/client/auth/mutations";
 import { getUserProfileQuery } from "@/services/client/auth/queries";
 import { pickUserDisplay } from "@/services/client/auth/userDisplay";
+import { parseUserProfilePayload, resolveUserMediaUrl } from "@/services/client/auth/profileParse";
 import ReverseHoverHeaderLoginPill from "@/components/elements/ReverseHoverHeaderLoginPill";
 
 export type HeaderUserNavProps = {
@@ -62,6 +63,7 @@ export default function HeaderUserNav({
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const logoutMutation = useLogoutMutation(locale);
+  const [avatarFailed, setAvatarFailed] = useState(false);
 
   const { data: profilePayload, isPending } = useQuery({
     ...getUserProfileQuery(locale),
@@ -72,6 +74,15 @@ export default function HeaderUserNav({
     isAuthed && isPending
       ? { title: "…" }
       : pickUserDisplay(profilePayload);
+
+  const avatarUrl = (() => {
+    if (avatarFailed) return null;
+    const p = parseUserProfilePayload(profilePayload);
+    return resolveUserMediaUrl(p.imageUrl);
+  })();
+
+  const initial =
+    display.title && display.title !== "…" ? display.title.trim().slice(0, 1).toUpperCase() : "";
 
   useEffect(() => {
     if (!open) return;
@@ -196,7 +207,18 @@ export default function HeaderUserNav({
           }
         >
           <div className="icon flex items-center justify-center">
-            <UserIcon />
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}  
+                alt=""
+                className="h-[33px] w-[33px] rounded-full object-cover"
+                onError={() => setAvatarFailed(true)}
+              />
+            ) : initial ? (
+              <span className="text-[15px] font-semibold leading-none">{initial}</span>
+            ) : (
+              <UserIcon />
+            )}
           </div>
         </div>
         <span
