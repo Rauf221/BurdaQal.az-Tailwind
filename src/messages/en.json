@@ -91,6 +91,8 @@
   "propertyAdvancedFilter": {
     "minBedrooms": "Bedrooms (minimum)",
     "minBathrooms": "Bathrooms (minimum)",
+    "minRooms": "Rooms (minimum)",
+    "roomCountPlaceholder": "Room count",
     "minAreaPlaceholder": "Min. area",
     "maxAreaPlaceholder": "Max. area",
     "minPrice": "Min. price (AZN)",

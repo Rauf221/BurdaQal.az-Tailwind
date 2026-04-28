@@ -91,6 +91,8 @@
   "propertyAdvancedFilter": {
     "minBedrooms": "Yataq otağı (minimum)",
     "minBathrooms": "Hamam (minimum)",
+    "minRooms": "Otaq (minimum)",
+    "roomCountPlaceholder": "Otaq sayı",
     "minAreaPlaceholder": "Min. sahə",
     "maxAreaPlaceholder": "Max. sahə",
     "minPrice": "Min. qiymət (AZN)",

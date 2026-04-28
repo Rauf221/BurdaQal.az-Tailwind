@@ -11,7 +11,7 @@ import { announcementsListQuery } from "@/services/client/properties";
 import { categoriesListQuery } from "@/services/dashboard/Add-New-Properties/queries";
 
 /** Bu bölmədə göstəriləcək maksimum elan kartı sayı */
-export const WORK_WITH_US_HOME_MAX_CARDS = 6;
+export const WORK_WITH_US_HOME_MAX_CARDS = 8;
 
 export default function WorkWithUsHome() {
   const locale = useLocale();
@@ -34,7 +34,7 @@ export default function WorkWithUsHome() {
     "border-transparent bg-transparent text-[var(--Text)]";
 
   return (
-    <section className="tf-section work-with-us style-3 pb-[200px] pt-[163px] md:pt-[202px]">
+    <section className="tf-section work-with-us style-3 pb-[100px] pt-[60px] md:pt-[120px]">
       <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
         <div className="row -mx-[14px]">
           <div className="col-12 px-[14px]">
@@ -97,7 +97,7 @@ export default function WorkWithUsHome() {
 
           <div className="widget-content-tab">
             <div className="widget-content-inner active">
-              <div className="grid grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-4">
+              <div className="grid grid-cols-1  gap-7 md:grid-cols-2 xl:grid-cols-4">
                 {q.isError ? (
                   <div className="py-2">
                     <p className="text-[var(--Text)]">{t("listingsError")}</p>
@@ -143,7 +143,7 @@ export default function WorkWithUsHome() {
           </div>
         </div>
 
-        <div className="row -mx-[14px]">
+        <div className="row -mx-[14px] mt-10">
           <div className="col-12 px-[14px] text-center">
             <Link
               href="/elanlar"
