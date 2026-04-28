@@ -4,6 +4,8 @@ import { Home, LayoutGrid, LogOut, Plus, User } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useLogoutMutation } from "@/services/client/auth/mutations";
+import { useState } from "react";
+import { ConfirmModal } from "@/components/ui/ConfirmModal";
 
 const linkClass =
   "flex h-[60px] items-center gap-2.5 pl-5 text-base font-normal leading-6 text-white no-underline transition-colors hover:text-white";
@@ -18,12 +20,19 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations("dashboardSidebar");
+  const tc = useTranslations("common");
   const logoutMutation = useLogoutMutation(locale);
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const onLogout = (e: React.MouseEvent) => {
     e.preventDefault();
+    setLogoutOpen(true);
+  };
+
+  const confirmLogout = () => {
     logoutMutation.mutate(undefined, {
       onSettled: () => {
+        setLogoutOpen(false);
         window.location.href = locale === "az" ? "/" : `/${locale}`;
       },
     });
@@ -78,6 +87,34 @@ export default function DashboardSidebar() {
           </ul>
         </div>
       </div>
+
+      <ConfirmModal
+        open={logoutOpen}
+        onOpenChange={setLogoutOpen}
+        title={"Hesabdan çıxmaq istədiyinizə əminsiniz?"}
+        cancelLabel={tc("cancel")}
+        confirmLabel={t("logout")}
+        confirmPending={logoutMutation.isPending}
+        onConfirm={confirmLogout}
+        icon={
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+            aria-hidden
+          >
+            <path
+              d="M18.6667 10.6663V7.99967C18.6667 7.29243 18.3857 6.61415 17.8856 6.11406C17.3855 5.61396 16.7072 5.33301 16 5.33301H6.66667C5.95942 5.33301 5.28115 5.61396 4.78105 6.11406C4.28095 6.61415 4 7.29243 4 7.99967V23.9997C4 24.7069 4.28095 25.3852 4.78105 25.8853C5.28115 26.3854 5.95942 26.6663 6.66667 26.6663H16C16.7072 26.6663 17.3855 26.3854 17.8856 25.8853C18.3857 25.3852 18.6667 24.7069 18.6667 23.9997V21.333M9.33333 15.9997H28M28 15.9997L24 11.9997M28 15.9997L24 19.9997"
+              stroke="#FF3B30"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        }
+      />
     </div>
   );
 }
