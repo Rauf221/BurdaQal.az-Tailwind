@@ -1,20 +1,28 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useLocale } from "next-intl";
-import { ChevronRight, ImageOff } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { ImageOff } from "lucide-react";
 import Layout from "@/components/layout/Layout";
-import { BLOG_LIST, blogPostPath } from "@/lib/blogRoutes";
+import { BLOG_LIST } from "@/lib/blogRoutes";
 import { Link } from "@/i18n/navigation";
+import { BlogCard } from "@/components/elements/blog-card/BlogCard";
 import { getBlogRelatedQuery, getBlogShowQuery } from "@/services/client/blogs";
 import BlogSingleSkeleton from "@/components/blog/BlogSingleSkeleton";
 import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
+
+const FALLBACK_BLOG_IMAGES = [
+  "/images/image-box/img-1.svg",
+  "/images/image-box/img-2.svg",
+  "/images/image-box/img-3.svg",
+];
 
 const apiBodyCls =
   "blog-api-body text-[17px] font-normal leading-7 text-[var(--Text)] [&_a]:text-[var(--Third)] hover:[&_a]:underline [&_blockquote]:my-6 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--Secondary)] [&_blockquote]:bg-[#F9F9F9] [&_blockquote]:py-4 [&_blockquote]:pl-6 [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:text-[28px] [&_h2]:font-semibold [&_h2]:leading-tight [&_h2]:text-[var(--Secondary)] [&_h3]:mb-2 [&_h3]:mt-6 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[var(--Secondary)] [&_img]:my-6 [&_img]:max-w-full [&_img]:rounded-xl [&_li]:mb-1 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-4 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6";
 
 export default function BlogSingle({ slug }: { slug: string }) {
   const locale = useLocale();
+  const tb = useTranslations("blogPage");
   const { data: showRes, isPending: loadingShow, isError: errShow } = useQuery(
     getBlogShowQuery(slug, locale),
   );
@@ -72,7 +80,7 @@ export default function BlogSingle({ slug }: { slug: string }) {
         </FadeIn>
         <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
           <div className="mx-auto max-w-[920px]">
-            <FadeIn delay={0.06} className="blog-single-inner mb-[200px] flex flex-col gap-[51px]">
+            <FadeIn delay={0.06} className="blog-single-inner mb-[10px] flex flex-col gap-[51px]">
               <ul className="breadcrumbs style-1 mb-5 flex flex-wrap items-center justify-start gap-[5px]">
                 <li>
                   <Link href="/" className="text-[15px] leading-7 text-[var(--Text)] hover:underline">
@@ -133,64 +141,28 @@ export default function BlogSingle({ slug }: { slug: string }) {
           </div>
         </div>
         {related.length > 0 ? (
-          <FadeIn className="wg-related-posts rounded-3xl bg-[#F9F9F9] px-[14px] pb-[171px] pt-[191px]">
+          <FadeIn className="wg-related-posts rounded-3xl bg-[#F9F9F9] px-[14px] pb-[64px] pt-[64px] mb-30">
             <div className="themesflat-container mx-auto w-full max-w-[1428px]">
               <div className="heading-section mb-9 text-center min-[992px]:mb-[46px]">
                 <h2 className="-mt-2 mb-4 text-[40px] font-semibold leading-[47px] text-[var(--Secondary)]">
-                  Related Posts
+                  {tb("relatedTitle")}
                 </h2>
                 <div className="text text-[17px] font-normal leading-5 text-[var(--Text)]">
-                  Oxşar yazılar
+                  {tb("relatedSubtitle")}
                 </div>
               </div>
-              <FadeInStagger className="grid grid-cols-1 gap-[29px] md:grid-cols-2 xl:grid-cols-4">
-                {related.slice(0, 4).map((item) => (
-                  <FadeInStaggerItem key={item.slug} className="min-w-0">
-                    <div className="wg-blog flex h-full flex-col overflow-hidden rounded-2xl transition-shadow hover:shadow-[0px_6px_15px_0px_#404F680D]">
-                      <div className="image h-[200px] shrink-0 overflow-hidden">
-                        {item.thumb_image || item.image ? (
-                          <img
-                            src={item.thumb_image || item.image}
-                            alt={item.title}
-                            className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
-                          />
-                        ) : (
-                          <div
-                            className="flex h-full w-full items-center justify-center bg-[#f0f0f0] text-[var(--Text)]/30"
-                            aria-hidden
-                          >
-                            <ImageOff className="h-10 w-10" strokeWidth={1.25} />
-                          </div>
-                        )}
-                      </div>
-                      <div className="content flex flex-1 flex-col rounded-b-2xl border border-[var(--Border)] border-t-0 bg-[var(--White)] px-[25px] pt-[22px] pb-[30px] text-center">
-                        <div className="sub-blog mb-[13px] flex flex-wrap items-center justify-center gap-6">
-                          <div className="relative text-[15px] font-normal leading-7 text-[var(--Text)] after:absolute after:-right-3.5 after:top-1/2 after:h-1 after:w-1 after:-translate-y-1/2 after:rounded-full after:bg-[var(--Text)] last:after:hidden">
-                            {item.tags?.[0]?.name ?? "Blog"}
-                          </div>
-                          <div className="text-[15px] font-normal leading-7 text-[var(--Text)]">
-                            &nbsp;
-                          </div>
-                        </div>
-                        <div className="name mb-[14px] min-h-[56px] text-[17px] font-medium leading-7 text-[var(--Secondary)]">
-                          <Link
-                            href={blogPostPath(item.slug)}
-                            className="line-clamp-2 text-[var(--Secondary)] hover:underline"
-                          >
-                            {item.title}
-                          </Link>
-                        </div>
-                        <Link
-                          href={blogPostPath(item.slug)}
-                          className="tf-button-no-bg mx-auto mt-auto inline-flex items-center gap-2.5 text-[15px] font-medium leading-[18px] text-[var(--Secondary)] transition-colors hover:text-[var(--Primary)]"
-                        >
-                          Read More
-                          <ChevronRight className="h-[18px] w-[18px]" strokeWidth={2} />
-                        </Link>
-                      </div>
-                    </div>
-                  </FadeInStaggerItem>
-                ))}
+              <FadeInStagger className="grid grid-cols-1 gap-[29px] md:grid-cols-2 xl:grid-cols-3">
+                {related.slice(0, 4).map((item, i) => {
+                  const imageSrc =
+                    item.thumb_image ||
+                    item.image ||
+                    FALLBACK_BLOG_IMAGES[i % FALLBACK_BLOG_IMAGES.length];
+                  return (
+                    <FadeInStaggerItem key={item.slug} className="min-w-0">
+                      <BlogCard post={item} imageSrc={imageSrc} />
+                    </FadeInStaggerItem>
+                  );
+                })}
               </FadeInStagger>
             </div>
           </FadeIn>

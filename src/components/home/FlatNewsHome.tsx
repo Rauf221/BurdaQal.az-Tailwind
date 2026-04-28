@@ -1,30 +1,23 @@
 import { getTranslations } from "next-intl/server";
 import SliderNewsHome from "@/components/home/SliderNewsHome";
 
+/** Figma 2151:8706 — Faydalı Bloqlar: #f4f5f6 fon, başlıq + şəbəkə + «Daha çoxuna bax». */
 export default async function FlatNewsHome() {
   const t = await getTranslations("flatNewsHome");
 
   return (
-    <section className="tf-section flat-news rounded-[24px] bg-[#F9F9F9] py-20 md:py-[200px]">
+    <section className="tf-section flat-news bg-[#f4f5f6] py-[80px]">
       <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
-        <div className="row -mx-[14px]">
-          <div className="col-12 px-[14px]">
-            <div className="heading-section mb-[46px] text-center">
-              <h2 className="-mt-2 mb-4 text-[40px] font-semibold leading-[47px] text-[var(--Secondary)]">
-                {t("title")}
-              </h2>
-              <div className="text text-[17px] font-normal leading-5 text-[var(--Text)]">
-                {t("subtitle")}
-              </div>
-            </div>
+        <div className="flex flex-col gap-12">
+          <div className="mx-auto flex w-full max-w-[516px] flex-col gap-4 text-center">
+            <h2 className="text-[36px] font-semibold leading-[44px] tracking-tight text-[#2f3235]">
+              {t("title")}
+            </h2>
+            <p className="text-[16px] font-normal leading-6 text-[#797c80]">
+              {t("subtitle")}
+            </p>
           </div>
-        </div>
-        <div className="row -mx-[14px]">
-          <div className="col-12 px-[14px]">
-            <div className="slider-news slider-auto">
-              <SliderNewsHome />
-            </div>
-          </div>
+          <SliderNewsHome />
         </div>
       </div>
     </section>

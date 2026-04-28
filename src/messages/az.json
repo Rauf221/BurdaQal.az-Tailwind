@@ -121,6 +121,7 @@
     "requestFailed": "Sorğu uğursuz oldu."
   },
   "footer": {
+    "ariaLabel": "Saytın alt hissəsi — abunə, keçidlər və əlaqə",
     "followUs": "Bizi izləyin",
     "subscribe": "Abunə olun",
     "emailPlaceholder": "E-poçtunuz",
@@ -190,8 +191,9 @@
     "nextSlide": "Növbəti rayonlar"
   },
   "flatNewsHome": {
-    "title": "Faydalı məqalələr",
-    "subtitle": "Rayonlar, ev seçimi və istirahət üçün lazım olan bütün faydalı məlumatlar burada."
+    "title": "Faydalı Bloqlar",
+    "subtitle": "Rayonlar, ev seçimi və istirahət üçün lazım olan bütün faydalı məlumatlar burada.",
+    "seeMore": "Daha çoxuna bax"
   },
   "sliderNewsHome": {
     "loadError": "Bloglar yüklənmədi.",
@@ -262,7 +264,9 @@
     "breadcrumbHome": "Ana səhifə",
     "loadError": "Blog siyahısı alınmadı. Bir az sonra yenidən cəhd edin.",
     "emptyFilter": "Bu filtr üzrə yazı yoxdur.",
-    "readMore": "Ətraflı oxu"
+    "readMore": "Ətraflı oxu",
+    "relatedTitle": "Oxşar yazılar",
+    "relatedSubtitle": "Bu mövzuya yaxın digər yazılarla tanış olun."
   },
   "aboutPage": {
     "teamTitle": "Ekspert komandamızla tanış olun",

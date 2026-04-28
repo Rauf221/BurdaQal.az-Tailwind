@@ -6,8 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Layout from "@/components/layout/Layout";
-import { BLOG_LIST, blogPostPath } from "@/lib/blogRoutes";
-import { Link, useRouter } from "@/i18n/navigation";
+import { BLOG_LIST } from "@/lib/blogRoutes";
+import { Link } from "@/i18n/navigation";
 import { getBlogsQuery, getTagsQuery } from "@/services/client/blogs";
 import {
   BlogFilterSkeletonRow,
@@ -15,6 +15,13 @@ import {
   BlogListPageSkeleton,
 } from "@/components/blog/BlogListSkeleton";
 import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
+import { BlogCard } from "@/components/elements/blog-card/BlogCard";
+
+const FALLBACK_BLOG_IMAGES = [
+  "/images/image-box/img-1.svg",
+  "/images/image-box/img-2.svg",
+  "/images/image-box/img-3.svg",
+];
 
 function BlogListFallback() {
   return <BlogListPageSkeleton />;
@@ -25,7 +32,6 @@ function BlogListContent() {
   const t = useTranslations("blogPage");
   const tn = useTranslations("navigation");
   const tc = useTranslations("common");
-  const router = useRouter();
   const searchParams = useSearchParams();
   const activeTag = searchParams.get("tag") || "";
   const page = Math.max(1, Number(searchParams.get("page") || "1") || 1);
@@ -67,7 +73,7 @@ function BlogListContent() {
   return (
     <>
       <FadeIn>
-        <div className="flat-title relative z-20 pt-[90px] pb-[94px]">
+        <div className="flat-title relative z-20 pt-[52px] pb-[36px] ">
           <div className="themesflat-container full mx-auto w-full max-w-[1920px] px-[14px]">
             <div className="text-center">
               <h2 className="mb-[14px] text-[40px] font-semibold leading-[47px] text-[var(--Secondary)]">
@@ -90,7 +96,7 @@ function BlogListContent() {
       <div className="blog-list-api-wrap px-5">
         <FadeIn>
           <div className="widget-tabs style-1">
-          <div className="themesflat-container mx-auto mb-5 w-full max-w-[1428px] px-[14px]">
+          <div className="themesflat-container mx-auto mb-10 w-full max-w-[1428px] px-[14px]">
             {tagsPending ? (
               <BlogFilterSkeletonRow />
             ) : (
@@ -128,8 +134,8 @@ function BlogListContent() {
         </div>
         </FadeIn>
 
-        <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px]">
-          <FadeInStagger className="grid grid-cols-1 gap-[29px] sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+        <div className="themesflat-container mx-auto w-full max-w-[1428px] px-[14px] mb-30">
+          <FadeInStagger className="grid grid-cols-1 gap-[29px] sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3">
             {blogsPending ? <BlogGridSkeleton /> : null}
             {isError ? (
               <div className="col-span-full text-[var(--Text)]">
@@ -138,55 +144,16 @@ function BlogListContent() {
             ) : null}
             {!blogsPending &&
               !isError &&
-              posts.map((post) => (
+              posts.map((post, i) => (
                 <FadeInStaggerItem key={post.slug} className="min-w-0">
-                  <div
-                    className="group wg-blog mb-0 flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl transition-shadow hover:shadow-[0px_6px_15px_0px_#404F680D]"
-                    role="link"
-                    tabIndex={0}
-                    onClick={() => router.push(blogPostPath(post.slug))}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        router.push(blogPostPath(post.slug));
-                      }
-                    }}
-                  >
-                    <div className="image h-[200px] shrink-0 overflow-hidden">
-                      <img
-                        src={post.thumb_image || post.image}
-                        alt={post.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    </div>
-                    <div className="content flex flex-1 flex-col rounded-b-2xl border border-[var(--Border)] border-t-0 bg-[var(--White)] px-[25px] pt-[22px] pb-[30px] text-center">
-                      <div className="sub-blog mb-[13px] flex flex-wrap items-center justify-center gap-6">
-                        <div className="relative text-[15px] font-normal leading-7 text-[var(--Text)] after:absolute after:-right-3.5 after:top-1/2 after:h-1 after:w-1 after:-translate-y-1/2 after:rounded-full after:bg-[var(--Text)] last:after:hidden">
-                          {post.tags?.[0]?.name ?? tc("blogFallbackTag")}
-                        </div>
-                        <div className="date text-[15px] font-normal leading-7 text-[var(--Text)]">
-                          {post.created_at ?? tc("dash")}
-                        </div>
-                      </div>
-                      <div className="name mb-[14px] min-h-[56px] text-[17px] font-medium leading-7 text-[var(--Secondary)]">
-                        <Link
-                          href={blogPostPath(post.slug)}
-                          className="line-clamp-2 text-[var(--Secondary)] hover:underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {post.title}
-                        </Link>
-                      </div>
-                      <Link
-                        href={blogPostPath(post.slug)}
-                        className="tf-button-no-bg mx-auto mt-auto inline-flex items-center gap-2.5 text-[15px] font-medium leading-[18px] text-[var(--Secondary)] transition-colors hover:text-[var(--Primary)]"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {t("readMore")}
-                        <ChevronRight className="h-[18px] w-[18px]" strokeWidth={2} />
-                      </Link>
-                    </div>
-                  </div>
+                  <BlogCard
+                    post={post}
+                    imageSrc={
+                      post.thumb_image ||
+                      post.image ||
+                      FALLBACK_BLOG_IMAGES[i % FALLBACK_BLOG_IMAGES.length]
+                    }
+                  />
                 </FadeInStaggerItem>
               ))}
             {!blogsPending && !isError && posts.length === 0 ? (
