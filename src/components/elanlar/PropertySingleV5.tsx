@@ -25,7 +25,7 @@ import "swiper/css/free-mode";
 
 import { useTranslations } from "next-intl";
 import Layout from "@/components/layout/Layout";
-import SliderBoxDream from "@/components/elanlar/SliderBoxDream";
+import ElanlarCard from "@/components/elements/ElanlarCard";
 import { announcementCardImages } from "@/components/elanlar/announcementCardImages";
 import { Link } from "@/i18n/navigation";
 import { FadeIn, FadeInStagger, FadeInStaggerItem } from "@/components/motion";
@@ -132,6 +132,7 @@ export type PropertySingleV5Props = {
 export default function PropertySingleV5({ announcement, similarHomes }: PropertySingleV5Props) {
   const t = useTranslations("propertySingle");
   const tc = useTranslations("common");
+  const tl = useTranslations("listings");
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -534,74 +535,30 @@ export default function PropertySingleV5({ announcement, similarHomes }: Propert
                   <div className="smilar-homes mt-16">
                     <h4 className="mb-2">{t("similarHomes")}</h4>
                     <FadeInStagger className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                      {similarHomes.map((row, si) => {
+                      {similarHomes.map((row) => {
                         const d = row.detail;
                         const imgs = announcementCardImages(row.media);
                         const href = `/elanlar/${row.slug}`;
                         return (
-                          <FadeInStaggerItem key={row.id} className="min-w-0">
-                            <div className="box-dream has-border">
-                              <div className="image-group relative">
-                                <div className="list-tags">
-                                  <Link href="/#" className="tags-item for-sell">
-                                    {t("tagListing")}
-                                  </Link>
-                                  <Link href="/#" className="tags-item featured">
-                                    {t("tagFeatured")}
-                                  </Link>
-                                </div>
-                                <div className="swiper-container slider-box-dream arrow-style-1 pagination-style-1 relative z-[1] [&_.swiper]:m-0 [&_.swiper]:h-full [&_.swiper]:max-w-full [&_.swiper]:w-full">
-                                  <SliderBoxDream
-                                    path="house/home"
-                                    start={1 + si}
-                                    end={3 + si}
-                                    detailHref={href}
-                                    images={imgs}
-                                    navKey={`sim-${row.id}`}
-                                  />
-                                </div>
-                              </div>
-                              <div className="content">
-                                <div className="head">
-                                  <div className="title">
-                                    <Link href={href}>{row.title}</Link>
-                                  </div>
-                                  <div className="price">
-                                    {row.price ? `${row.price} ₼` : tc("dash")}
-                                  </div>
-                                </div>
-                                <div className="location">
-                                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[var(--Text)]" />
-                                  <p>{row.address?.street ?? tc("dash")}</p>
-                                </div>
-                                <div className="icon-box">
-                                  <div className="item">
-                                    <BedDouble className="h-5 w-5 text-[var(--Text)]" />
-                                    <p>
-                                      {d?.bedroom != null
-                                        ? t("bedsShort", { count: d.bedroom })
-                                        : tc("dash")}
-                                    </p>
-                                  </div>
-                                  <div className="item">
-                                    <Bath className="h-5 w-5 text-[var(--Text)]" />
-                                    <p>
-                                      {d?.bathroom != null
-                                        ? t("bathsShort", { count: d.bathroom })
-                                        : tc("dash")}
-                                    </p>
-                                  </div>
-                                  <div className="item">
-                                    <LayoutGrid className="h-5 w-5 text-[var(--Text)]" />
-                                    <p>
-                                      {d?.room != null
-                                        ? t("roomsShort", { count: d.room })
-                                        : tc("dash")}
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                          <FadeInStaggerItem key={row.id} className="min-w-0 flex justify-center">
+                            <ElanlarCard
+                              href={href}
+                              title={row.title ?? ""}
+                              imageAlt={row.title ?? ""}
+                              priceLine={
+                                row.price ? tl("priceAzn", { price: row.price }) : tc("dash")
+                              }
+                              address={row.address?.street || tc("dash")}
+                              beds={d?.bedroom ?? null}
+                              baths={d?.bathroom ?? null}
+                              rooms={d?.room ?? null}
+                              emptyLabel={tc("dash")}
+                              images={imgs}
+                              mediaReady
+                              badge={tl("tagListing")}
+                              autoplayOnHover
+                              className="w-full max-w-full"
+                            />
                           </FadeInStaggerItem>
                         );
                       })}
