@@ -106,6 +106,9 @@ export default function DashboardMyProfileClient() {
 
   const resolvedServer = resolveUserMediaUrl(serverImagePath);
   const avatarSrc = imagePreview || resolvedServer;
+  const avatarEffectiveSrc = avatarSrc || "/images/elnurbey.jpg";
+  const [avatarFailedSrc, setAvatarFailedSrc] = useState<string | null>(null);
+  const avatarDisplaySrc = avatarFailedSrc === avatarEffectiveSrc ? null : avatarEffectiveSrc;
 
   const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] ?? null;
@@ -314,11 +317,12 @@ export default function DashboardMyProfileClient() {
 
           <div className="flex flex-wrap items-start gap-8 gap-y-6">
             <div className="relative h-[150px] w-[150px] shrink-0">
-              {avatarSrc ? (
+              {avatarDisplaySrc ? (
                 <img
-                  src={avatarSrc}
+                  src={avatarDisplaySrc}
                   alt=""
                   className="h-full w-full rounded-full object-cover"
+                  onError={() => setAvatarFailedSrc(avatarEffectiveSrc)}
                 />
               ) : (
                 <div

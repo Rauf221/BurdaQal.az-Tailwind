@@ -12,7 +12,7 @@ type BlogCardProps = {
 
 export function BlogCard({ post, imageSrc }: BlogCardProps) {
   const tc = useTranslations("common");
-
+console.log(imageSrc)
   return (
     <article
       className="flex flex-col gap-4"
@@ -27,6 +27,7 @@ export function BlogCard({ post, imageSrc }: BlogCardProps) {
           alt={post.title}
           className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
         />
+
       </Link>
       <div className="flex flex-col gap-3 px-2">
         <div className="flex flex-wrap items-center gap-2 text-[14px] font-normal leading-5 text-[#64717c]">
