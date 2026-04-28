@@ -91,6 +91,8 @@
   "propertyAdvancedFilter": {
     "minBedrooms": "Спальни (минимум)",
     "minBathrooms": "Ванные (минимум)",
+    "minRooms": "Комнаты (минимум)",
+    "roomCountPlaceholder": "Количество комнат",
     "minAreaPlaceholder": "Мин. площадь",
     "maxAreaPlaceholder": "Макс. площадь",
     "minPrice": "Мин. цена (AZN)",

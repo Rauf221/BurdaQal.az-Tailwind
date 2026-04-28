@@ -136,26 +136,20 @@ export function PropertyAdvancedFilterPanelContent({
           </select>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
-          <input
-            type="text"
-            inputMode="decimal"
-            placeholder={t("minAreaPlaceholder")}
-            className="h-14 rounded-xl border border-[var(--Border)] bg-[var(--White)] px-4 text-[16px] text-[var(--Secondary)] outline-none placeholder:text-[#8b8b8b]"
-            value={extraFilters.min_area}
+          <select
+            className="h-14 rounded-xl border border-[var(--Border)] bg-[var(--White)] px-4 text-[16px] font-medium text-[var(--Secondary)] outline-none sm:col-span-2 lg:col-span-2"
+            value={extraFilters.room}
             onChange={(e) =>
-              setExtraFilters((prev) => ({ ...prev, min_area: e.target.value }))
+              setExtraFilters((prev) => ({ ...prev, room: e.target.value }))
             }
-          />
-          <input
-            type="text"
-            inputMode="decimal"
-            placeholder={t("maxAreaPlaceholder")}
-            className="h-14 rounded-xl border border-[var(--Border)] bg-[var(--White)] px-4 text-[16px] text-[var(--Secondary)] outline-none placeholder:text-[#8b8b8b]"
-            value={extraFilters.max_area}
-            onChange={(e) =>
-              setExtraFilters((prev) => ({ ...prev, max_area: e.target.value }))
-            }
-          />
+          >
+            <option value="">{t("minRooms")}</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+            <option value="4">4+</option>
+            <option value="5">5+</option>
+          </select>
           <select
             className="h-14 rounded-xl border border-[var(--Border)] bg-[var(--White)] px-4 text-[16px] font-medium text-[var(--Secondary)] outline-none"
             value={extraFilters.min_price}
@@ -208,13 +202,13 @@ export function PropertyAdvancedFilterPanelContent({
         ) : attributeSections.length === 0 ? (
           <p className="m-0 text-[15px] text-[var(--Text)]">{t("noAmenities")}</p>
         ) : (
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
             {attributeSections.map((section) => (
               <div key={section.parent.id}>
                 <p className="mb-4 text-[15px] font-semibold text-[var(--Secondary)] md:text-[16px]">
                   {section.parent.name}
                 </p>
-                <ul className="m-0 grid w-full grid-cols-1 gap-x-6 gap-y-5 p-0 sm:grid-cols-2 md:grid-cols-3 md:gap-y-6">
+                <ul className="m-0 grid w-full grid-cols-1 gap-x-6 gap-y-5 p-0 sm:grid-cols-2 md:grid-cols-3 md:gap-y-2">
                   {section.children.map((item) => {
                     const idKey = String(item.id);
                     return (
@@ -236,7 +230,7 @@ export function PropertyAdvancedFilterPanelContent({
                         />
                         <label
                           htmlFor={pid(`attr-${item.id}`)}
-                          className="cursor-pointer text-[15px] leading-snug text-[var(--Text)] md:text-[16px]"
+                          className="cursor-pointer text-[15px] leading-snug text-[var(--Text)] md:text-[14px]"
                         >
                           {item.name}
                         </label>

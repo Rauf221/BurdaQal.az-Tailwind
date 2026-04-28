@@ -195,15 +195,15 @@ export default function FlatCitiesHome() {
                         </SwiperSlide>
                       ))}
                     </Swiper>
-                    <div className="mt-8 flex items-center justify-center gap-6 sm:mt-10 sm:gap-5">
+                    <div className="mt-8 flex items-center justify-center gap-6 sm:mt-20 sm:gap-5 ">
                       <div
-                        className={`flat-cities-prev swiper-button-prev !static !left-auto !right-auto !top-auto mt-0 !h-11 !w-11 -translate-y-0 rounded-full border border-jh-border bg-jh-white  ${flatCitiesSwiperNavSvg}`}
+                        className={`flat-cities-prev swiper-button-prev !static !left-auto !right-auto !top-auto mt-0 !h-11 !w-11 -translate-y-0 rounded-full border-0 text-white [--swiper-navigation-color:#fff] !opacity-100 [&.swiper-button-disabled]:!bg-[#eef0f2] [&.swiper-button-disabled]:!opacity-100 [&.swiper-button-disabled]:text-[#AEAEB2] [&.swiper-button-disabled]:[--swiper-navigation-color:#AEAEB2] [&:not(.swiper-button-disabled)]:!bg-black [&:not(.swiper-button-disabled)]:text-white ${flatCitiesSwiperNavSvg}`}
                         role="button"
                         tabIndex={0}
                         aria-label={t("prevSlide")}
                       />
                       <div
-                        className={`flat-cities-next swiper-button-next !static !left-auto !right-auto !top-auto mt-0 !h-11 !w-11 -translate-y-0 rounded-full border border-jh-border bg-jh-white ${flatCitiesSwiperNavSvg}`}
+                        className={`flat-cities-next swiper-button-next !static !left-auto !right-auto !top-auto mt-0 !h-11 !w-11 -translate-y-0 rounded-full border-0 text-white [--swiper-navigation-color:#fff] !opacity-100 [&.swiper-button-disabled]:!bg-[#eef0f2] [&.swiper-button-disabled]:!opacity-100 [&.swiper-button-disabled]:text-[#AEAEB2] [&.swiper-button-disabled]:[--swiper-navigation-color:#AEAEB2] [&:not(.swiper-button-disabled)]:!bg-black [&:not(.swiper-button-disabled)]:text-white ${flatCitiesSwiperNavSvg}`}
                         role="button"
                         tabIndex={0}
                         aria-label={t("nextSlide")}
